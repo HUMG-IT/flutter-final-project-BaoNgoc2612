@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'employee_model.dart';
 
 part 'user_model.freezed.dart';
@@ -19,6 +20,15 @@ sealed class UserModel with _$UserModel {
     required DateTime createdAt,
   }) = _UserModel;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    // Handle Firestore Timestamp conversion
+    if (json['createdAt'] is Timestamp) {
+      json['createdAt'] = (json['createdAt'] as Timestamp)
+          .toDate()
+          .toIso8601String();
+    }
+    return _$UserModelFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() => _$UserModelToJson(this as _UserModel);
 }

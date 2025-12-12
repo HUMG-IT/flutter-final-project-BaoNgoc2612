@@ -96,7 +96,24 @@ Sinh viên cần tạo tài liệu báo cáo kết quả, hướng dẫn cài đ
   - Quá trình kiểm thử tự động bao gồm kiểm thử đơn vị và kiểm thử UI (bắt buộc).
   - Trình bày các chức năng chính của ứng dụng (bắt buộc).
   Các video cần biên tập sao cho rõ ràng, dễ hiểu và không quá dài (tối đa 5 phút).
-- **Báo cáo kết quả**: Đây là nội dung báo cáo của bài tập lớn. Sinh viên cần viết báo cáo ngắn mô tả quá trình phát triển, các thư viện đã sử dụng và các kiểm thử đã thực hiện. Có thể viết trực tiếp trên file README.md này ở mục `Báo cáo kết quả`.
+- **Báo cáo kết quả**: 
+  - **Quá trình phát triển**:
+    - Xây dựng cấu trúc dự án theo mô hình MVVM/Provider clean architecture.
+    - Thiết kế UI hiện đại, responsive, hỗ trợ Dark/Light mode (nền tảng theme).
+    - Tích hợp Firebase Auth (Login, Register, Forgot Password) và Firestore (CRUD nhân viên, lương).
+    - Thực hiện chức năng tìm kiếm nhân viên theo tên và chức vụ.
+    - Xử lý các edge cases: validation form, error handling, loading states.
+  - **Thư viện sử dụng**:
+    - `provider`: Quản lý trạng thái.
+    - `firebase_core`, `firebase_auth`, `cloud_firestore`: Backend.
+    - `freezed`, `json_annotation`: Code generation cho models.
+    - `intl`: Định dạng ngày tháng, tiền tệ.
+    - `flutter_test`: Kiểm thử tự động.
+  - **Kết quả kiểm thử**:
+    - Unit Tests: Đã kiểm tra logic của `EmployeeModel` và `UserModel` (JSON serialization, validation).
+    - Widget Tests: Đã kiểm tra giao diện màn hình Đăng nhập (LoginScreen) và Danh sách nhân viên (EmployeeListScreen).
+    - Integration: App hoạt động mượt mà với backend Firebase.
+
 - **GitHub Actions**: Thiết lập GitHub Actions để chạy kiểm thử tự động khi có thay đổi mã nguồn. Tệp cấu hình workflow cần được đặt trong thư mục `.github/workflows`, đặt tên tệp theo định dạng `ci.yml` (có trong mẫu của bài tập lớn). Github Actions cần chạy thành công và không có lỗi nếu mã nguồn không có vấn đề. Trong trường hợp có lỗi, sinh viên cần sửa lỗi và cập nhật mã nguồn để build thành công. Nếu lỗi liên quan đến `Billing & plans`, sinh viên cần thông báo cho giảng viên để được hỗ trợ hoặc bỏ qua yêu cầu này.
 
 ## Tiêu chí đánh giá
@@ -140,7 +157,7 @@ Sinh viên cần tạo tài liệu báo cáo kết quả, hướng dẫn cài đ
 - **9/10**: Hoàn thiện kiểm thử CRUD, trạng thái, tích hợp API/CSDL; UI thân thiện.
 - **10/10**: Tối ưu hóa hoàn chỉnh, UI/UX mượt mà, CI/CD đầy đủ và ổn định.
 
-## Tự đánh giá điểm: X/10
+## Tự đánh giá điểm: 10/10
 Sinh viên cần tự đánh giá mức độ hoàn thiện của ứng dụng và so sánh với tiêu chí đánh giá để xác định điểm cuối cùng. Điểm tự đánh giá sẽ được sử dụng như một tiêu chí tham khảo cho giảng viên đánh giá cuối cùng.
 
 Chúc các bạn hoàn thành tốt bài tập lớn và khám phá thêm nhiều kiến thức bổ ích qua dự án này!

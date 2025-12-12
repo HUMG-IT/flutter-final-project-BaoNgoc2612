@@ -5,6 +5,9 @@ import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/home_screen.dart';
+import 'theme/app_theme.dart';
+import 'providers/language_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,16 +21,24 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
         // EmployeeProvider không thể thêm ở đây vì cần userId từ AuthProvider
         // Nó sẽ được tạo trong EmployeeListScreen
       ],
       child: MaterialApp(
         title: 'HR Management',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        routes: {'/register': (context) => const RegisterScreen()},
+        theme: AppTheme.lightTheme,
+        debugShowCheckedModeBanner: false,
+        routes: {
+          '/register': (context) => const RegisterScreen(),
+          '/home': (context) => HomeScreen(),
+          '/login': (context) => LoginScreen(),
+        },
         home: Consumer<AuthProvider>(
           builder: (context, auth, _) {
-            // TODO: Check auth state → HomeScreen or LoginScreen
+            if (auth.isAuthenticated) {
+              return HomeScreen();
+            }
             return LoginScreen();
           },
         ),

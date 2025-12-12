@@ -11,7 +11,6 @@ part of 'user_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$UserModel {
 
@@ -22,8 +21,6 @@ mixin _$UserModel {
 @pragma('vm:prefer-inline')
 $UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>(this as UserModel, _$identity);
 
-  /// Serializes this UserModel to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.role, role) || other.role == role)&&(identical(other.department, department) || other.department == department)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,uid,email,displayName,role,department,createdAt);
 
@@ -205,11 +202,11 @@ return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.departm
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _UserModel extends UserModel {
   const _UserModel({required this.uid, required this.email, this.displayName, required this.role, required this.department, required this.createdAt}): super._();
-  factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  
 
 @override final  String uid;
 @override final  String email;
@@ -224,17 +221,14 @@ class _UserModel extends UserModel {
 @pragma('vm:prefer-inline')
 _$UserModelCopyWith<_UserModel> get copyWith => __$UserModelCopyWithImpl<_UserModel>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$UserModelToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.role, role) || other.role == role)&&(identical(other.department, department) || other.department == department)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,uid,email,displayName,role,department,createdAt);
 

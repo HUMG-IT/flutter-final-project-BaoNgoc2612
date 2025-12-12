@@ -16,6 +16,10 @@ dependencies:
   provider: ^6.1.2
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
+  http: ^1.1.0
+  intl: ^0.19.0
+  google_fonts: ^6.3.2
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

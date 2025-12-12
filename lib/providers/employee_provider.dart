@@ -50,18 +50,14 @@ class EmployeeProvider with ChangeNotifier {
 
   // Method mới: Add employee
   Future<void> addEmployee(EmployeeModel employee) async {
-    final ref = await _firestore.collection('employees').add(employee.toJson());
-    await ref.update({'id': ref.id});
-    await loadEmployees(employee.userId);
+    await _service!.createEmployee(employee);
+    notifyListeners();
   }
 
   // Method mới: Update employee
   Future<void> updateEmployee(EmployeeModel employee) async {
-    await _firestore
-        .collection('employees')
-        .doc(employee.id)
-        .update(employee.toJson());
-    await loadEmployees(employee.userId);
+    await _service!.updateEmployee(employee.id, employee);
+    notifyListeners();
   }
 
   Future<EmployeeModel?> create(EmployeeModel employee) async {

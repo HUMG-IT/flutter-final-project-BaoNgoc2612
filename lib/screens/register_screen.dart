@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/employee_model.dart';
-import 'home_screen.dart';
+import '../models/user_model.dart';
+import '../theme/app_theme.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _nameController = TextEditingController();
 
   Department _selectedDepartment = Department.it;
+  UserRole _selectedRole = UserRole.employee;
   bool _isLoading = false;
   String? _error;
 
@@ -34,166 +36,251 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('Đăng ký tài khoản'),
-        backgroundColor: Colors.blue,
+        title: const Text('New Account'),
+        backgroundColor: AppTheme.primaryColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        titleTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Icon(Icons.person_add, size: 80, color: Colors.blue),
-              const SizedBox(height: 20),
-              const Text(
-                'Tạo tài khoản mới',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 30),
-
-              // Họ tên
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Họ và tên',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
+        child: Column(
+          children: [
+            Container(
+               width: double.infinity,
+               color: AppTheme.primaryColor,
+               padding: const EdgeInsets.only(bottom: 30),
+               child: Column(
+                 children: [
+                   Container(
+                     padding: const EdgeInsets.all(12),
+                     decoration: BoxDecoration(
+                       color: Colors.white.withOpacity(0.2),
+                       shape: BoxShape.circle,
+                     ),
+                     child: const Icon(Icons.person_add_alt_1_rounded, size: 60, color: Colors.white),
+                   ),
+                   const SizedBox(height: 10),
+                   Text(
+                     "Join Our Team",
+                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                       color: Colors.white,
+                       fontWeight: FontWeight.bold
+                     ),
+                   ),
+                 ],
+               ),
+            ),
+            
+            Transform.translate(
+              offset: const Offset(0, -20),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Vui lòng nhập họ tên';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Email
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
-                ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Vui lòng nhập email';
-                  }
-                  if (!value.contains('@')) {
-                    return 'Email không hợp lệ';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Phòng ban
-              DropdownButtonFormField<Department>(
-                value: _selectedDepartment,
-                decoration: const InputDecoration(
-                  labelText: 'Phòng ban',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.business),
-                ),
-                items: Department.values.map((dept) {
-                  return DropdownMenuItem(
-                    value: dept,
-                    child: Text(dept.name.toUpperCase()),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _selectedDepartment = value);
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Mật khẩu
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Mật khẩu',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Vui lòng nhập mật khẩu';
-                  }
-                  if (value.length < 6) {
-                    return 'Mật khẩu phải có ít nhất 6 ký tự';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Xác nhận mật khẩu
-              TextFormField(
-                controller: _confirmPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'Xác nhận mật khẩu',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock_outline),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Vui lòng xác nhận mật khẩu';
-                  }
-                  if (value != _passwordController.text) {
-                    return 'Mật khẩu không khớp';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              // Error message
-              if (_error != null)
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    _error!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                ),
-
-              // Nút đăng ký
-              SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _register,
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          'Đăng ký',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Create Account',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textPrimary,
                         ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+            
+                      // Name
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Full Name',
+                          prefixIcon: Icon(Icons.person_outline),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+            
+                      // Email
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: Icon(Icons.email_outlined),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!value.contains('@')) {
+                            return 'Invalid email address';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+            
+                      // Department
+                      if (_selectedRole != UserRole.admin) ...[
+                        DropdownButtonFormField<Department>(
+                          value: _selectedDepartment,
+                          decoration: const InputDecoration(
+                            labelText: 'Department',
+                            prefixIcon: Icon(Icons.business_outlined),
+                          ),
+                          items: Department.values.map((dept) {
+                            return DropdownMenuItem(
+                              value: dept,
+                              child: Text(dept.name.toUpperCase()),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() => _selectedDepartment = value);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+            
+                      // Role
+                      DropdownButtonFormField<UserRole>(
+                        value: _selectedRole,
+                        decoration: const InputDecoration(
+                          labelText: 'Role',
+                          prefixIcon: Icon(Icons.admin_panel_settings_outlined),
+                        ),
+                        items: UserRole.values.map((role) {
+                          return DropdownMenuItem(
+                            value: role,
+                            child: Text(_getRoleDisplayName(role)),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() => _selectedRole = value);
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+            
+                      // Password
+                      TextFormField(
+                        controller: _passwordController,
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: Icon(Icons.lock_outline),
+                        ),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter password';
+                          }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+            
+                      // Confirm Password
+                      TextFormField(
+                        controller: _confirmPasswordController,
+                        decoration: const InputDecoration(
+                          labelText: 'Confirm Password',
+                          prefixIcon: Icon(Icons.lock_outline),
+                        ),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm password';
+                          }
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
+            
+                      if (_error != null)
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          margin: const EdgeInsets.only(bottom: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.red.shade200),
+                          ),
+                          child: Text(
+                            _error!,
+                            style: TextStyle(color: Colors.red.shade700),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+            
+                      SizedBox(
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _register,
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(color: Colors.white)
+                              : const Text(
+                                  'REGISTER',
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          'Already have an account? Login',
+                          style: TextStyle(
+                            color: AppTheme.secondaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
-
-              // Quay lại đăng nhập
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Đã có tài khoản? Đăng nhập'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -215,27 +302,78 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: _passwordController.text,
         name: _nameController.text.trim(),
         department: _selectedDepartment,
+        role: _selectedRole,
       );
 
       if (result != null) {
+        await context.read<AuthProvider>().logout();
+
         if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => HomeScreen()),
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              title: Row(
+                children: const [
+                  Icon(Icons.mark_email_read, color: AppTheme.primaryColor),
+                  SizedBox(width: 8),
+                  Text('Verify Email'),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Registration Successful!',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'We have sent a verification email to:\n${_emailController.text.trim()}',
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Please check your email (including spam folder) and click the link to verify.',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Got it'),
+                ),
+              ],
+            ),
           );
         }
       } else {
-        setState(() => _error = 'Đăng ký thất bại - Vui lòng thử lại');
+        setState(() => _error = 'Registration failed - Please try again');
       }
     } catch (e) {
-      print('=== REGISTRATION ERROR ===');
-      print(e.toString());
-      print('=========================');
-      setState(() => _error = 'Lỗi đăng ký: ${e.toString()}');
+      if (mounted) {
+        setState(() => _error = 'Error: ${e.toString()}');
+      }
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
       }
+    }
+  }
+
+  String _getRoleDisplayName(UserRole role) {
+    switch (role) {
+      case UserRole.admin:
+        return 'Admin';
+      case UserRole.manager:
+        return 'Manager';
+      case UserRole.employee:
+        return 'Employee';
     }
   }
 }

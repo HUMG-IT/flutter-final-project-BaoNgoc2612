@@ -19,6 +19,7 @@ class AuthService {
     required String password,
     required String name,
     required Department department,
+    required UserRole role,
   }) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
@@ -31,12 +32,23 @@ class AuthService {
         // Update display name
         await user.updateDisplayName(name);
 
+        // Send verification email
+        await user.sendEmailVerification();
+
+        // Tự động gán role dựa trên email nếu là admin
+        UserRole finalRole = role;
+        if (email.contains('admin') || email.endsWith('@admin.com')) {
+          finalRole = UserRole.admin;
+        } else if (email.contains('manager')) {
+          finalRole = UserRole.manager;
+        }
+
         // Create UserModel & save to Firestore
         final userModel = UserModel(
           uid: user.uid,
           email: email,
           displayName: name,
-          role: UserRole.employee,
+          role: finalRole,
           department: department,
           createdAt: DateTime.now(),
         );
@@ -45,6 +57,26 @@ class AuthService {
             .collection('users')
             .doc(user.uid)
             .set(userModel.toJson());
+
+        // Nếu là Role Employee hoặc Manager, tự động tạo hồ sơ nhân viên
+        if (role != UserRole.admin) {
+          final employeeModel = EmployeeModel(
+            id: '', // Will be generated or same as uid
+            userId: user.uid,
+            name: name,
+            email: email,
+            phone: '', // User will update later
+            department: department,
+            position: role == UserRole.manager ? 'Manager' : 'Staff',
+            salary: 0,
+            hireDate: DateTime.now(),
+            status: EmployeeStatus.active,
+          );
+          
+          await _firestore
+              .collection('employees')
+              .add(employeeModel.toJson());
+        }
 
         return userModel;
       }
@@ -66,6 +98,14 @@ class AuthService {
       );
 
       if (result.user != null) {
+        // Check if email is verified
+        if (!result.user!.emailVerified) {
+          await _auth.signOut();
+          throw Exception(
+            'Email chưa được xác thực. Vui lòng kiểm tra email và xác thực tài khoản.',
+          );
+        }
+
         DocumentSnapshot userDoc = await _firestore
             .collection('users')
             .doc(result.user!.uid)
@@ -96,6 +136,9 @@ class AuthService {
         return 'Không tìm thấy user';
       case 'wrong-password':
         return 'Sai mật khẩu';
+      case 'invalid-credential':
+      case 'invalid-login-credentials':
+        return 'Thông tin đăng nhập không chính xác (Sai email hoặc mật khẩu)';
       default:
         return 'Lỗi: ${e.message ?? e.code}';
     }
