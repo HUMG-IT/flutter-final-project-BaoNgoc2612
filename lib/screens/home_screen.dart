@@ -12,8 +12,10 @@ import '../theme/app_theme.dart';
 import '../providers/language_provider.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -101,8 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ? FloatingActionButton(
                   onPressed: () => _addEmployee(context),
                   backgroundColor: AppTheme.primaryColor,
-                  child: const Icon(Icons.add, color: Colors.white),
                   tooltip: 'Add Employee',
+                  child: const Icon(Icons.add, color: Colors.white),
                 )
               : null,
         );
@@ -115,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),

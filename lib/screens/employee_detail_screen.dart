@@ -105,7 +105,7 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
                            padding: const EdgeInsets.only(bottom: 24),
                            child: CircleAvatar(
                              radius: 50,
-                             backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                             backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
                              child: Text(
                                (widget.employee?.displayName ?? '?').substring(0, 1).toUpperCase(),
                                style: const TextStyle(fontSize: 40, color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
@@ -171,7 +171,7 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
                             ),
                             const SizedBox(height: 16),
                             DropdownButtonFormField<Department>(
-                              value: _selectedDepartment,
+                              initialValue: _selectedDepartment,
                               decoration: const InputDecoration(
                                 labelText: 'Department',
                                 prefixIcon: Icon(Icons.business_outlined),
@@ -186,7 +186,7 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
                             ),
                             const SizedBox(height: 16),
                             DropdownButtonFormField<String>(
-                              value: _selectedStatus,
+                              initialValue: _selectedStatus,
                               decoration: const InputDecoration(
                                 labelText: 'Status',
                                 prefixIcon: Icon(Icons.flag_outlined),
@@ -429,7 +429,8 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
     if (confirm == true) {
       setState(() => _isLoading = true);
       try {
-        final provider = context.read<EmployeeProvider>();
+        if (!mounted) return;
+      final provider = context.read<EmployeeProvider>();
         
         final employeeUserId = widget.employee?.uid;
         final currentAdminId = FirebaseAuth.instance.currentUser?.uid;
@@ -442,9 +443,11 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
              if (isHealthy) {
                  await BackendApiService.deleteEmployeeAccount(employeeUserId);
              } else {
+                 if (mounted) {
                  ScaffoldMessenger.of(context).showSnackBar(
                    const SnackBar(content: Text('Warning: Backend server offline. Auth account not deleted.')),
                  );
+             }
              }
         }
 

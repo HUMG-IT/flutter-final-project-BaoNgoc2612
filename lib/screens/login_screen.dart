@@ -6,8 +6,10 @@ import '../theme/app_theme.dart';
 import '../providers/language_provider.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -43,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -80,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       builder: (context, lang, _) => Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: DropdownButton<String>(
@@ -166,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         builder: (context, lang, _) => Text(
                           lang.getText('forgot_password'),
                           style: TextStyle(
-                            color: AppTheme.primaryColor.withOpacity(0.8),
+                            color: AppTheme.primaryColor.withValues(alpha: 0.8),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -209,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         elevation: 4,
-                        shadowColor: AppTheme.primaryColor.withOpacity(0.4),
+                        shadowColor: AppTheme.primaryColor.withValues(alpha: 0.4),
                       ),
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
@@ -233,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Consumer<LanguageProvider>(
                         builder: (context, lang, _) => Text(
-                          lang.getText('dont_have_account') + ' ',
+                          '${lang.getText('dont_have_account')} ',
                           style: TextStyle(color: Colors.grey.shade600),
                         ),
                       ),

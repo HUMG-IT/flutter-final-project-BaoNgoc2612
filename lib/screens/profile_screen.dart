@@ -7,7 +7,7 @@ import '../theme/app_theme.dart';
 import '../providers/language_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             return Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
+                                color: Colors.white.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: DropdownButton<String>(
@@ -121,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 10,
                               offset: const Offset(0, 5),
                             ),
@@ -132,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           backgroundColor: Colors.grey.shade200,
                           child: Text(
                             user.displayName?.substring(0, 1).toUpperCase() ?? 'U',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 40,
                               fontWeight: FontWeight.bold,
                               color: AppTheme.primaryColor,
@@ -163,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _getRoleColor(user.role).withOpacity(0.1),
+                    color: _getRoleColor(user.role).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -193,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.02),
+                              color: Colors.black.withValues(alpha: 0.02),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -234,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.02),
+                              color: Colors.black.withValues(alpha: 0.02),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),

@@ -86,7 +86,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                            BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -97,7 +97,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: AppTheme.primaryColor.withOpacity(0.1),
+                              color: AppTheme.primaryColor.withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.person, color: AppTheme.primaryColor),
@@ -141,7 +141,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
                       children: [
                         Expanded(
                           child: DropdownButtonFormField<int>(
-                            value: _selectedMonth,
+                            initialValue: _selectedMonth,
                             decoration: const InputDecoration(
                               labelText: 'Month',
                               prefixIcon: Icon(Icons.calendar_month),
@@ -159,7 +159,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
                         const SizedBox(width: 16),
                         Expanded(
                           child: DropdownButtonFormField<int>(
-                            value: _selectedYear,
+                            initialValue: _selectedYear,
                             decoration: const InputDecoration(
                               labelText: 'Year',
                               prefixIcon: Icon(Icons.calendar_today),
@@ -239,7 +239,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
 
                     // Status
                     DropdownButtonFormField<String>(
-                      value: _status,
+                      initialValue: _status,
                       decoration: const InputDecoration(
                         labelText: 'Status',
                         prefixIcon: Icon(Icons.flag_outlined),
@@ -265,7 +265,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.blue.withOpacity(0.3),
+                            color: Colors.blue.withValues(alpha: 0.3),
                             blurRadius: 10,
                             offset: const Offset(0, 5),
                           ),
@@ -281,7 +281,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
                                 style: TextStyle(color: Colors.white70, fontSize: 16),
                               ),
                               Text(
-                                NumberFormat('#,##0', 'vi_VN').format(_calculateTotal()) + ' VNĐ',
+                                '${NumberFormat('#,##0', 'vi_VN').format(_calculateTotal())} VNĐ',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -303,7 +303,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
                                 ),
                               ),
                               Text(
-                                NumberFormat('#,##0', 'vi_VN').format(_calculateAfterTax(_calculateTotal())) + ' VNĐ',
+                                '${NumberFormat('#,##0', 'vi_VN').format(_calculateAfterTax(_calculateTotal()))} VNĐ',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,

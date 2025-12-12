@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -17,8 +18,8 @@ class BackendApiService {
     String role = 'employee',
   }) async {
     try {
-      print('API Request: POST $baseUrl/api/employees/create-account');
-      print('Body: ${json.encode({
+      debugPrint('API Request: POST $baseUrl/api/employees/create-account');
+      debugPrint('Body: ${json.encode({
           'email': email,
           'password': password,
           'displayName': displayName,
@@ -36,8 +37,8 @@ class BackendApiService {
         }),
       );
       
-      print('API Response Status: ${response.statusCode}');
-      print('API Response Body: ${response.body}');
+      debugPrint('API Response Status: ${response.statusCode}');
+      debugPrint('API Response Body: ${response.body}');
 
       final data = json.decode(response.body);
 

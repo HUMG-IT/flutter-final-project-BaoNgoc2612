@@ -51,7 +51,7 @@ class AppTheme {
       primaryColor: primaryColor,
       scaffoldBackgroundColor: backgroundColor,
       textTheme: textTheme,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: primaryColor,
         secondary: secondaryColor,
         surface: surfaceColor,

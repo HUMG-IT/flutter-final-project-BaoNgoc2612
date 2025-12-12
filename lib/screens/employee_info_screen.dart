@@ -8,7 +8,7 @@ import '../theme/app_theme.dart';
 // The salary table generation logic was inside the widget locally. I'll keep it.
 
 class EmployeeInfoScreen extends StatelessWidget {
-  const EmployeeInfoScreen({Key? key}) : super(key: key);
+  const EmployeeInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class EmployeeInfoScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
                         ),
@@ -84,12 +84,12 @@ class EmployeeInfoScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppTheme.primaryColor.withOpacity(0.1), width: 2),
+                            border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1), width: 2),
                             shape: BoxShape.circle,
                           ),
                           child: CircleAvatar(
                             radius: 35,
-                            backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                            backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
                             child: Text(
                               (user.displayName ?? '?')
                                   .substring(0, 1)
@@ -152,7 +152,7 @@ class EmployeeInfoScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                          BoxShadow(
-                          color: Colors.black.withOpacity(0.02),
+                          color: Colors.black.withValues(alpha: 0.02),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -214,7 +214,7 @@ class EmployeeInfoScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.green.withOpacity(0.3),
+                          color: Colors.green.withValues(alpha: 0.3),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
                         ),
@@ -310,7 +310,7 @@ class EmployeeInfoScreen extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: AppTheme.primaryColor.withOpacity(0.1),
+          color: AppTheme.primaryColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, color: AppTheme.primaryColor, size: 20),

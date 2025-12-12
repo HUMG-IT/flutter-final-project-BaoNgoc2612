@@ -76,7 +76,7 @@ class MockEmployeeProvider extends ChangeNotifier implements EmployeeProvider {
   List<UserModel> get employees => _employees;
   final List<UserModel> _employees = [];
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   @override
   bool get isLoading => _isLoading;
 

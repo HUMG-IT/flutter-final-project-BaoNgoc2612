@@ -10,7 +10,7 @@ import '../providers/language_provider.dart';
 class EmployeeListScreen extends StatelessWidget {
   final String userId;
 
-  const EmployeeListScreen({Key? key, required this.userId}) : super(key: key);
+  const EmployeeListScreen({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +124,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                 onPressed: _showFilterDialog,
               ),
               IconButton(
-                icon: Icon(Icons.sort, color: AppTheme.textSecondary),
+                icon: const Icon(Icons.sort, color: AppTheme.textSecondary),
                 onPressed: _showSortDialog,
               ),
               const SizedBox(width: 8),
@@ -221,7 +221,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -254,7 +254,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withOpacity(0.1),
+                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -405,11 +405,24 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Sort By', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 20),
-              _buildSortOption(context, 'Name', SortOption.name, setModalState),
-              _buildSortOption(context, 'Salary', SortOption.salary, setModalState),
-              _buildSortOption(context, 'Hire Date', SortOption.hireDate, setModalState),
+              RadioGroup<SortOption>(
+                value: _sortBy,
+                onChanged: (val) {
+                  if (val != null) {
+                    setModalState(() => _sortBy = val);
+                    setState(() {});
+                  }
+                },
+                child: Column(
+                  children: [
+                    Text('Sort By', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 20),
+                    _buildSortOption(context, 'Name', SortOption.name, setModalState),
+                    _buildSortOption(context, 'Salary', SortOption.salary, setModalState),
+                    _buildSortOption(context, 'Hire Date', SortOption.hireDate, setModalState),
+                  ],
+                ),
+              ),
               const Divider(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -440,12 +453,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
     return RadioListTile<SortOption>(
       title: Text(label),
       value: option,
-      groupValue: _sortBy,
       activeColor: AppTheme.primaryColor,
-      onChanged: (value) {
-        setModalState(() => _sortBy = value!);
-        setState(() {});
-      },
     );
   }
 
@@ -492,7 +500,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                       setModalState(() => _filterDepartment = selected ? dept : null);
                       setState(() {});
                     },
-                    selectedColor: AppTheme.primaryColor.withOpacity(0.2),
+                    selectedColor: AppTheme.primaryColor.withValues(alpha: 0.2),
                     checkmarkColor: AppTheme.primaryColor,
                   );
                 }).toList(),
@@ -511,7 +519,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                       setModalState(() => _filterStatus = selected ? status : null);
                       setState(() {});
                     },
-                    selectedColor: AppTheme.primaryColor.withOpacity(0.2),
+                    selectedColor: AppTheme.primaryColor.withValues(alpha: 0.2),
                     checkmarkColor: AppTheme.primaryColor,
                   );
                 }).toList(),

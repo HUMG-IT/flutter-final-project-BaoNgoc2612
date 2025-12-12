@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 
@@ -39,7 +40,7 @@ class EmployeeService {
       await _usersRef().doc(user.uid).set(user.toJson(), SetOptions(merge: true));
       return user;
     } catch (e) {
-      print('Save error: $e');
+      debugPrint('Save error: $e');
       return null;
     }
   }
@@ -53,7 +54,7 @@ class EmployeeService {
         return UserModel.fromJson(data);
       }
     } catch (e) {
-      print('Get error: $e');
+      debugPrint('Get error: $e');
     }
     return null;
   }
@@ -65,7 +66,7 @@ class EmployeeService {
       await _usersRef().doc(uid).delete();
       return true;
     } catch (e) {
-      print('Delete error: $e');
+      debugPrint('Delete error: $e');
       return false;
     }
   }

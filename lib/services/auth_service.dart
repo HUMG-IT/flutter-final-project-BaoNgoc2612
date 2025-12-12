@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
@@ -87,7 +88,7 @@ class AuthService {
             .get();
 
         final userData = userDoc.data() as Map<String, dynamic>;
-        print('User Data: $userData');
+        debugPrint('User Data: $userData');
         return UserModel.fromJson(userData);
       }
     } on FirebaseAuthException catch (e) {

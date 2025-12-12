@@ -5,10 +5,10 @@ import '../models/user_model.dart';
 import '../theme/app_theme.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
@@ -60,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                    Container(
                      padding: const EdgeInsets.all(12),
                      decoration: BoxDecoration(
-                       color: Colors.white.withOpacity(0.2),
+                       color: Colors.white.withValues(alpha: 0.2),
                        shape: BoxShape.circle,
                      ),
                      child: const Icon(Icons.person_add_alt_1_rounded, size: 60, color: Colors.white),
@@ -87,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -146,7 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             
                       // Department (Manager's Department)
                       DropdownButtonFormField<Department>(
-                        value: _selectedDepartment,
+                        initialValue: _selectedDepartment,
                         decoration: const InputDecoration(
                           labelText: 'My Department',
                           prefixIcon: Icon(Icons.business_outlined),
@@ -242,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       const SizedBox(height: 16),
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: Text(
+                        const Text(
                           'Already have an account? Login',
                           style: TextStyle(
                             color: AppTheme.secondaryColor,
@@ -281,7 +281,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (result != null) {
-        await context.read<AuthProvider>().logout();
+        if (mounted) {
+          await context.read<AuthProvider>().logout();
+        }
 
         if (mounted) {
           showDialog(

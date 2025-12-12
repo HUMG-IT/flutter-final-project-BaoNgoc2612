@@ -54,7 +54,7 @@ class AuthProvider extends ChangeNotifier {
           _user = null;
         }
       } catch (e) {
-        print('Auth State Error: $e');
+        debugPrint('Auth State Error: $e');
         _user = null;
       }
       notifyListeners();
