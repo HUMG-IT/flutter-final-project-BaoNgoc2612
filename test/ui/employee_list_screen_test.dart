@@ -170,7 +170,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Close bottom sheet
-    await tester.tapAt(const Offset(10, 10)); // Tap outside
+    await tester.pageBack();
     await tester.pumpAndSettle();
   });
 
@@ -221,7 +221,8 @@ void main() {
     await tester.pumpAndSettle();
 
     // Close dialog
-    await tester.tapAt(const Offset(10, 10)); // Tap outside
+    // await tester.tapAt(const Offset(10, 10)); // Tap outside
+    await tester.pageBack();
     await tester.pumpAndSettle();
 
     // Verify only IT Guy exists
