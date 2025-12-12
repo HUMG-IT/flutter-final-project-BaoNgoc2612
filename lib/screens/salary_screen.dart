@@ -106,7 +106,6 @@ class _SalaryScreenState extends State<SalaryScreen> {
                   .collection('salaries')
                   .where('employeeId', isEqualTo: currentUser?.uid)
                   .where('year', isEqualTo: _selectedYear)
-                  .orderBy('month')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -127,6 +126,12 @@ class _SalaryScreenState extends State<SalaryScreen> {
                 }
 
                 final salaries = snapshot.data?.docs ?? [];
+                // Sort client-side to avoid Firestore Index requirement
+                salaries.sort((a, b) {
+                  final sA = SalaryModel.fromJson(a.data() as Map<String, dynamic>);
+                  final sB = SalaryModel.fromJson(b.data() as Map<String, dynamic>);
+                  return sA.month.compareTo(sB.month);
+                });
 
                 if (salaries.isEmpty) {
                   return Center(

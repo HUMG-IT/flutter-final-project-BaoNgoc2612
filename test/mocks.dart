@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/user_model.dart';
-import 'package:flutter_project/models/employee_model.dart';
 import 'package:flutter_project/providers/auth_provider.dart';
 import 'package:flutter_project/providers/employee_provider.dart';
 import 'package:flutter_project/providers/language_provider.dart';
@@ -12,7 +10,7 @@ class MockAuthProvider extends ChangeNotifier implements AuthProvider {
   String? role;
   
   @override
-  UserModel? get user => isLoggedIn ? UserModel(uid: 'test', email: 'test@test.com', displayName: 'Test', role: UserRole.admin, department: Department.it, createdAt: DateTime.now()) : null;
+  UserModel? get user => isLoggedIn ? UserModel(uid: 'test', email: 'test@test.com', displayName: 'Test', role: UserRole.manager, department: Department.it, createdAt: DateTime.now()) : null;
 
   @override
   Future<UserModel?> login({required String email, required String password}) async {
@@ -75,20 +73,47 @@ class MockLanguageProvider extends ChangeNotifier implements LanguageProvider {
 
 class MockEmployeeProvider extends ChangeNotifier implements EmployeeProvider {
   @override
-  List<EmployeeModel> get employees => _employees;
-  final List<EmployeeModel> _employees = [];
+  List<UserModel> get employees => _employees;
+  final List<UserModel> _employees = [];
 
+  // Assuming provider logic might not expose stream directly in interface or we mock it simple
+  // But if the abstract class/interface requires it, we must implement.
+  // The real provider has 'employees' getter and uses stream internally.
+  // Checking EmployeeProvider interface... it extends ChangeNotifier.
+  // It has 'employees', 'isLoading', 'loadEmployees', 'addEmployee', etc.
+  
+  bool _isLoading = false;
   @override
-  Stream<List<EmployeeModel>> get employeesStream => Stream.value(_employees);
+  bool get isLoading => _isLoading;
 
-  void setEmployees(List<EmployeeModel> list) {
+
+  void setEmployees(List<UserModel> list) {
     _employees.clear();
     _employees.addAll(list);
     notifyListeners();
   }
 
   @override
-  Future<void> loadEmployees(String userId) async {}
+  Future<void> loadEmployees() async {}
+
+  @override
+  Future<void> addEmployee(UserModel user) async {
+      _employees.add(user);
+      notifyListeners();
+  }
+
+  @override
+  Future<void> updateEmployee(UserModel user) async {
+     // mock update
+     notifyListeners();
+  }
+
+  @override
+  Future<bool> deleteEmployee(String uid) async {
+      _employees.removeWhere((e) => e.uid == uid);
+      notifyListeners();
+      return true;
+  }
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);

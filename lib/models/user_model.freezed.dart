@@ -11,30 +11,33 @@ part of 'user_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$UserModel {
 
- String get uid; String get email; String? get displayName; UserRole get role; Department get department; DateTime get createdAt;
+ String get uid; String get email; String? get displayName; UserRole get role; Department get department;@FirestoreDateTimeConverter() DateTime get createdAt; String get phone; double get baseSalary; DateTime? get hireDate; String get status; String get position;
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>(this as UserModel, _$identity);
 
+  /// Serializes this UserModel to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.role, role) || other.role == role)&&(identical(other.department, department) || other.department == department)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.role, role) || other.role == role)&&(identical(other.department, department) || other.department == department)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.baseSalary, baseSalary) || other.baseSalary == baseSalary)&&(identical(other.hireDate, hireDate) || other.hireDate == hireDate)&&(identical(other.status, status) || other.status == status)&&(identical(other.position, position) || other.position == position));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,uid,email,displayName,role,department,createdAt);
+int get hashCode => Object.hash(runtimeType,uid,email,displayName,role,department,createdAt,phone,baseSalary,hireDate,status,position);
 
 @override
 String toString() {
-  return 'UserModel(uid: $uid, email: $email, displayName: $displayName, role: $role, department: $department, createdAt: $createdAt)';
+  return 'UserModel(uid: $uid, email: $email, displayName: $displayName, role: $role, department: $department, createdAt: $createdAt, phone: $phone, baseSalary: $baseSalary, hireDate: $hireDate, status: $status, position: $position)';
 }
 
 
@@ -45,7 +48,7 @@ abstract mixin class $UserModelCopyWith<$Res>  {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) = _$UserModelCopyWithImpl;
 @useResult
 $Res call({
- String uid, String email, String? displayName, UserRole role, Department department, DateTime createdAt
+ String uid, String email, String? displayName, UserRole role, Department department,@FirestoreDateTimeConverter() DateTime createdAt, String phone, double baseSalary, DateTime? hireDate, String status, String position
 });
 
 
@@ -62,7 +65,7 @@ class _$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? uid = null,Object? email = null,Object? displayName = freezed,Object? role = null,Object? department = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? uid = null,Object? email = null,Object? displayName = freezed,Object? role = null,Object? department = null,Object? createdAt = null,Object? phone = null,Object? baseSalary = null,Object? hireDate = freezed,Object? status = null,Object? position = null,}) {
   return _then(_self.copyWith(
 uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
@@ -70,7 +73,12 @@ as String,displayName: freezed == displayName ? _self.displayName : displayName 
 as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as UserRole,department: null == department ? _self.department : department // ignore: cast_nullable_to_non_nullable
 as Department,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,baseSalary: null == baseSalary ? _self.baseSalary : baseSalary // ignore: cast_nullable_to_non_nullable
+as double,hireDate: freezed == hireDate ? _self.hireDate : hireDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -152,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String uid,  String email,  String? displayName,  UserRole role,  Department department,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String uid,  String email,  String? displayName,  UserRole role,  Department department, @FirestoreDateTimeConverter()  DateTime createdAt,  String phone,  double baseSalary,  DateTime? hireDate,  String status,  String position)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.department,_that.createdAt);case _:
+return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.department,_that.createdAt,_that.phone,_that.baseSalary,_that.hireDate,_that.status,_that.position);case _:
   return orElse();
 
 }
@@ -173,10 +181,10 @@ return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.departm
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String uid,  String email,  String? displayName,  UserRole role,  Department department,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String uid,  String email,  String? displayName,  UserRole role,  Department department, @FirestoreDateTimeConverter()  DateTime createdAt,  String phone,  double baseSalary,  DateTime? hireDate,  String status,  String position)  $default,) {final _that = this;
 switch (_that) {
 case _UserModel():
-return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.department,_that.createdAt);}
+return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.department,_that.createdAt,_that.phone,_that.baseSalary,_that.hireDate,_that.status,_that.position);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -190,10 +198,10 @@ return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.departm
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String uid,  String email,  String? displayName,  UserRole role,  Department department,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String uid,  String email,  String? displayName,  UserRole role,  Department department, @FirestoreDateTimeConverter()  DateTime createdAt,  String phone,  double baseSalary,  DateTime? hireDate,  String status,  String position)?  $default,) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.department,_that.createdAt);case _:
+return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.department,_that.createdAt,_that.phone,_that.baseSalary,_that.hireDate,_that.status,_that.position);case _:
   return null;
 
 }
@@ -202,18 +210,23 @@ return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.departm
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _UserModel extends UserModel {
-  const _UserModel({required this.uid, required this.email, this.displayName, required this.role, required this.department, required this.createdAt}): super._();
-  
+  const _UserModel({required this.uid, required this.email, this.displayName, required this.role, required this.department, @FirestoreDateTimeConverter() required this.createdAt, this.phone = '', this.baseSalary = 0, this.hireDate, this.status = 'Active', this.position = 'Staff'}): super._();
+  factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
 @override final  String uid;
 @override final  String email;
 @override final  String? displayName;
 @override final  UserRole role;
 @override final  Department department;
-@override final  DateTime createdAt;
+@override@FirestoreDateTimeConverter() final  DateTime createdAt;
+@override@JsonKey() final  String phone;
+@override@JsonKey() final  double baseSalary;
+@override final  DateTime? hireDate;
+@override@JsonKey() final  String status;
+@override@JsonKey() final  String position;
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
@@ -221,20 +234,23 @@ class _UserModel extends UserModel {
 @pragma('vm:prefer-inline')
 _$UserModelCopyWith<_UserModel> get copyWith => __$UserModelCopyWithImpl<_UserModel>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$UserModelToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.role, role) || other.role == role)&&(identical(other.department, department) || other.department == department)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.role, role) || other.role == role)&&(identical(other.department, department) || other.department == department)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.baseSalary, baseSalary) || other.baseSalary == baseSalary)&&(identical(other.hireDate, hireDate) || other.hireDate == hireDate)&&(identical(other.status, status) || other.status == status)&&(identical(other.position, position) || other.position == position));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,uid,email,displayName,role,department,createdAt);
+int get hashCode => Object.hash(runtimeType,uid,email,displayName,role,department,createdAt,phone,baseSalary,hireDate,status,position);
 
 @override
 String toString() {
-  return 'UserModel(uid: $uid, email: $email, displayName: $displayName, role: $role, department: $department, createdAt: $createdAt)';
+  return 'UserModel(uid: $uid, email: $email, displayName: $displayName, role: $role, department: $department, createdAt: $createdAt, phone: $phone, baseSalary: $baseSalary, hireDate: $hireDate, status: $status, position: $position)';
 }
 
 
@@ -245,7 +261,7 @@ abstract mixin class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Re
   factory _$UserModelCopyWith(_UserModel value, $Res Function(_UserModel) _then) = __$UserModelCopyWithImpl;
 @override @useResult
 $Res call({
- String uid, String email, String? displayName, UserRole role, Department department, DateTime createdAt
+ String uid, String email, String? displayName, UserRole role, Department department,@FirestoreDateTimeConverter() DateTime createdAt, String phone, double baseSalary, DateTime? hireDate, String status, String position
 });
 
 
@@ -262,7 +278,7 @@ class __$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? uid = null,Object? email = null,Object? displayName = freezed,Object? role = null,Object? department = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? uid = null,Object? email = null,Object? displayName = freezed,Object? role = null,Object? department = null,Object? createdAt = null,Object? phone = null,Object? baseSalary = null,Object? hireDate = freezed,Object? status = null,Object? position = null,}) {
   return _then(_UserModel(
 uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
@@ -270,7 +286,12 @@ as String,displayName: freezed == displayName ? _self.displayName : displayName 
 as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as UserRole,department: null == department ? _self.department : department // ignore: cast_nullable_to_non_nullable
 as Department,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,baseSalary: null == baseSalary ? _self.baseSalary : baseSalary // ignore: cast_nullable_to_non_nullable
+as double,hireDate: freezed == hireDate ? _self.hireDate : hireDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

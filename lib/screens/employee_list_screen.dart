@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/employee_provider.dart';
-import '../models/employee_model.dart';
+import '../models/user_model.dart';
 import 'employee_detail_screen.dart';
 import 'add_salary_screen.dart';
 import '../theme/app_theme.dart';
@@ -30,7 +30,6 @@ class EmployeeListContent extends StatefulWidget {
   State<EmployeeListContent> createState() => _EmployeeListContentState();
 }
 
-
 enum SortOption { name, salary, hireDate }
 
 class _EmployeeListContentState extends State<EmployeeListContent> {
@@ -41,7 +40,9 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
   SortOption _sortBy = SortOption.name;
   bool _sortAscending = true;
   Department? _filterDepartment;
-  EmployeeStatus? _filterStatus;
+  String? _filterStatus;
+
+  final List<String> statusOptions = ['Active', 'OnLeave', 'Terminated'];
 
   @override
   void dispose() {
@@ -49,13 +50,14 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
     super.dispose();
   }
 
-  List<EmployeeModel> _filteredEmployees(List<EmployeeModel> employees) {
-    List<EmployeeModel> filtered = employees;
+  List<UserModel> _filteredEmployees(List<UserModel> employees) {
+    List<UserModel> filtered = employees;
 
     // 1. Search Filter
     if (_searchQuery.isNotEmpty) {
       filtered = filtered.where((emp) {
-        return emp.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+        final name = emp.displayName ?? '';
+        return name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
                emp.position.toLowerCase().contains(_searchQuery.toLowerCase());
       }).toList();
     }
@@ -75,13 +77,15 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
       int cmp = 0;
       switch (_sortBy) {
         case SortOption.name:
-          cmp = a.name.compareTo(b.name);
+          cmp = (a.displayName ?? '').compareTo(b.displayName ?? '');
           break;
         case SortOption.salary:
-          cmp = a.salary.compareTo(b.salary);
+          cmp = a.baseSalary.compareTo(b.baseSalary);
           break;
         case SortOption.hireDate:
-          cmp = a.hireDate.compareTo(b.hireDate);
+          final dateA = a.hireDate ?? DateTime.now();
+          final dateB = b.hireDate ?? DateTime.now();
+          cmp = dateA.compareTo(dateB);
           break;
       }
       return _sortAscending ? cmp : -cmp;
@@ -94,95 +98,92 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
   Widget build(BuildContext context) {
     return Consumer<EmployeeProvider>(
       builder: (context, provider, child) {
-        return StreamBuilder<List<EmployeeModel>>(
-          stream: provider.employeesStream,
-          builder: (context, snapshot) {
-            final isLoading = !snapshot.hasData;
-            final employees = snapshot.data ?? [];
-            final filteredEmployees = _filteredEmployees(employees);
+        // We use the stream in provider or just the list exposed
+        // Provider now exposes 'employees' list which is updated by stream.
+        final employees = provider.employees;
+        final filteredEmployees = _filteredEmployees(employees);
+        final isLoading = provider.isLoading; // Simplified loading check based on provider state if needed
 
-            return Scaffold(
-              backgroundColor: AppTheme.backgroundColor,
-              appBar: AppBar(
-                title: Consumer<LanguageProvider>(
-                  builder: (context, lang, _) => Text(lang.getText('employee_list_title')),
+        return Scaffold(
+          backgroundColor: AppTheme.backgroundColor,
+          appBar: AppBar(
+            title: Consumer<LanguageProvider>(
+              builder: (context, lang, _) => Text(lang.getText('employee_list_title')),
+            ),
+            centerTitle: false,
+            backgroundColor: AppTheme.surfaceColor,
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.filter_list,
+                  color: (_filterDepartment != null || _filterStatus != null) 
+                      ? AppTheme.primaryColor 
+                      : AppTheme.textSecondary,
                 ),
-                centerTitle: false,
-                backgroundColor: AppTheme.surfaceColor,
-                elevation: 0,
-                actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.filter_list,
-                      color: (_filterDepartment != null || _filterStatus != null) 
-                          ? AppTheme.primaryColor 
-                          : AppTheme.textSecondary,
-                    ),
-                    onPressed: _showFilterDialog,
+                onPressed: _showFilterDialog,
+              ),
+              IconButton(
+                icon: Icon(Icons.sort, color: AppTheme.textSecondary),
+                onPressed: _showSortDialog,
+              ),
+              const SizedBox(width: 8),
+            ],
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(80),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppTheme.backgroundColor,
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.sort, color: AppTheme.textSecondary),
-                    onPressed: _showSortDialog,
-                  ),
-                  const SizedBox(width: 8),
-                ],
-                bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(80),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppTheme.backgroundColor,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: TextField(
-                        controller: searchController,
-                        decoration: InputDecoration(
-                          hintText: Provider.of<LanguageProvider>(context).getText('search_placeholder'),
-                          prefixIcon: const Icon(Icons.search, color: AppTheme.textSecondary),
-                          suffixIcon: _searchQuery.isNotEmpty
-                              ? IconButton(
-                                  icon: const Icon(Icons.clear, color: AppTheme.textSecondary),
-                                  onPressed: () {
-                                    setState(() {
-                                      searchController.clear();
-                                      _searchQuery = '';
-                                    });
-                                  },
-                                )
-                              : null,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _searchQuery = value;
-                          });
-                        },
-                      ),
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: Provider.of<LanguageProvider>(context).getText('search_placeholder'),
+                      prefixIcon: const Icon(Icons.search, color: AppTheme.textSecondary),
+                      suffixIcon: _searchQuery.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, color: AppTheme.textSecondary),
+                              onPressed: () {
+                                setState(() {
+                                  searchController.clear();
+                                  _searchQuery = '';
+                                });
+                              },
+                            )
+                          : null,
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
                   ),
                 ),
               ),
-              body: isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : filteredEmployees.isEmpty
-                      ? _buildEmptyState()
-                      : RefreshIndicator(
-                          onRefresh: () => provider.loadEmployees(widget.userId),
-                          child: ListView.builder(
-                            padding: const EdgeInsets.only(top: 8, bottom: 20),
-                            itemCount: filteredEmployees.length,
-                            itemBuilder: (context, index) => _buildEmployeeCard(
-                              context,
-                              filteredEmployees[index],
-                            ),
-                          ),
+            ),
+          ),
+          body: isLoading && employees.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : filteredEmployees.isEmpty
+                  ? _buildEmptyState()
+                  : RefreshIndicator(
+                      onRefresh: () => provider.loadEmployees(),
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(top: 8, bottom: 20),
+                        itemCount: filteredEmployees.length,
+                        itemBuilder: (context, index) => _buildEmployeeCard(
+                          context,
+                          filteredEmployees[index],
                         ),
-            );
-          },
+                      ),
+                    ),
         );
       },
     );
@@ -208,7 +209,10 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
     );
   }
 
-  Widget _buildEmployeeCard(BuildContext context, EmployeeModel employee) {
+  Widget _buildEmployeeCard(BuildContext context, UserModel employee) {
+    final name = employee.displayName ?? 'Unknown';
+    final initial = name.isNotEmpty ? name.substring(0, 1).toUpperCase() : '?';
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Container(
@@ -255,7 +259,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                     ),
                     child: Center(
                       child: Text(
-                        employee.name.isNotEmpty ? employee.name.substring(0, 1).toUpperCase() : '?',
+                        initial,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -270,7 +274,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          employee.name,
+                          name,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -295,11 +299,11 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                             ),
                             const SizedBox(width: 8),
                             _buildBadge(
-                              employee.status.name.toUpperCase(),
-                              employee.status.name == 'active' 
+                              employee.status.toUpperCase(),
+                              employee.status.toLowerCase() == 'active' 
                                   ? Colors.green.shade50 
                                   : Colors.orange.shade50,
-                              employee.status.name == 'active' 
+                              employee.status.toLowerCase() == 'active' 
                                   ? Colors.green.shade700 
                                   : Colors.orange.shade700,
                             ),
@@ -331,8 +335,8 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => AddSalaryScreen(
-                              employeeUserId: employee.userId,
-                              employeeName: employee.name,
+                              employeeUserId: employee.uid,
+                              employeeName: name,
                             ),
                           ),
                         );
@@ -498,10 +502,10 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
-                children: EmployeeStatus.values.map((status) {
+                children: statusOptions.map((status) {
                   final isSelected = _filterStatus == status;
                   return FilterChip(
-                    label: Text(status.name.toUpperCase()),
+                    label: Text(status.toUpperCase()),
                     selected: isSelected,
                     onSelected: (selected) {
                       setModalState(() => _filterStatus = selected ? status : null);

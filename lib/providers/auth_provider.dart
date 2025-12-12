@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/auth_service.dart';
 import '../models/user_model.dart';
-import '../models/employee_model.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -15,26 +14,47 @@ class AuthProvider extends ChangeNotifier {
 
   AuthProvider() {
     _auth.authStateChanges().listen((firebaseUser) async {
-      if (firebaseUser != null) {
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .get();
+      try {
+        if (firebaseUser != null) {
+          // Force reload to get latest emailVerified status
+          await firebaseUser.reload();
+          
+          // Re-fetch current user after reload to ensure we have the updated object
+          final currentUser = FirebaseAuth.instance.currentUser;
 
-        if (userDoc.exists) {
-          _user = UserModel.fromJson(userDoc.data()!);
+          if (currentUser == null || !currentUser.emailVerified) {
+            _user = null;
+            // Ensure they are fully signed out if not verified
+            if (currentUser != null) {
+              await _auth.signOut();
+            }
+            notifyListeners();
+            return;
+          }
+
+          final userDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(currentUser.uid)
+              .get();
+
+          if (userDoc.exists) {
+            _user = UserModel.fromJson(userDoc.data()!);
+          } else {
+            // Fallback nếu chưa có data trong Firestore
+            _user = UserModel(
+              uid: currentUser.uid,
+              email: currentUser.email!,
+              displayName: currentUser.displayName,
+              role: UserRole.employee,
+              department: Department.it,
+              createdAt: DateTime.now(),
+            );
+          }
         } else {
-          // Fallback nếu chưa có data trong Firestore
-          _user = UserModel(
-            uid: firebaseUser.uid,
-            email: firebaseUser.email!,
-            displayName: firebaseUser.displayName,
-            role: UserRole.employee,
-            department: Department.it,
-            createdAt: DateTime.now(),
-          );
+          _user = null;
         }
-      } else {
+      } catch (e) {
+        print('Auth State Error: $e');
         _user = null;
       }
       notifyListeners();
@@ -72,5 +92,9 @@ class AuthProvider extends ChangeNotifier {
     await _authService.logout();
     _user = null;
     notifyListeners();
+  }
+
+  Future<void> resendVerificationEmail(String email, String password) async {
+    await _authService.resendVerificationEmail(email, password);
   }
 }

@@ -30,10 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // Employee screens
         if (userRole == UserRole.employee) {
           final List<Widget> employeeScreens = [
-            ChangeNotifierProvider(
-              create: (_) => EmployeeProvider(userId: userId),
-              child: const EmployeeInfoScreen(),
-            ),
+            const EmployeeInfoScreen(),
             const SalaryScreen(),
             const ProfileScreen(),
           ];

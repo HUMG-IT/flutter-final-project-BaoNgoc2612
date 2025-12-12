@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import '../models/employee_model.dart';
 import '../models/user_model.dart';
 import '../theme/app_theme.dart';
 
@@ -20,7 +19,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _nameController = TextEditingController();
 
   Department _selectedDepartment = Department.it;
-  UserRole _selectedRole = UserRole.employee;
   bool _isLoading = false;
   String? _error;
 
@@ -146,50 +144,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 16),
             
-                      // Department
-                      if (_selectedRole != UserRole.admin) ...[
-                        DropdownButtonFormField<Department>(
-                          value: _selectedDepartment,
-                          decoration: const InputDecoration(
-                            labelText: 'Department',
-                            prefixIcon: Icon(Icons.business_outlined),
-                          ),
-                          items: Department.values.map((dept) {
-                            return DropdownMenuItem(
-                              value: dept,
-                              child: Text(dept.name.toUpperCase()),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() => _selectedDepartment = value);
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-            
-                      // Role
-                      DropdownButtonFormField<UserRole>(
-                        value: _selectedRole,
+                      // Department (Manager's Department)
+                      DropdownButtonFormField<Department>(
+                        value: _selectedDepartment,
                         decoration: const InputDecoration(
-                          labelText: 'Role',
-                          prefixIcon: Icon(Icons.admin_panel_settings_outlined),
+                          labelText: 'My Department',
+                          prefixIcon: Icon(Icons.business_outlined),
                         ),
-                        items: UserRole.values.map((role) {
+                        items: Department.values.map((dept) {
                           return DropdownMenuItem(
-                            value: role,
-                            child: Text(_getRoleDisplayName(role)),
+                            value: dept,
+                            child: Text(dept.name.toUpperCase()),
                           );
                         }).toList(),
                         onChanged: (value) {
                           if (value != null) {
-                            setState(() => _selectedRole = value);
+                            setState(() => _selectedDepartment = value);
                           }
                         },
                       ),
                       const SizedBox(height: 16),
-            
+                                  
                       // Password
                       TextFormField(
                         controller: _passwordController,
@@ -258,7 +233,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: _isLoading
                               ? const CircularProgressIndicator(color: Colors.white)
                               : const Text(
-                                  'REGISTER',
+                                  'REGISTER AS MANAGER',
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                         ),
@@ -302,7 +277,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: _passwordController.text,
         name: _nameController.text.trim(),
         department: _selectedDepartment,
-        role: _selectedRole,
+        role: UserRole.manager,
       );
 
       if (result != null) {
@@ -366,14 +341,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  String _getRoleDisplayName(UserRole role) {
-    switch (role) {
-      case UserRole.admin:
-        return 'Admin';
-      case UserRole.manager:
-        return 'Manager';
-      case UserRole.employee:
-        return 'Employee';
-    }
-  }
+  // _selectedRole removed as we default to Manager
 }

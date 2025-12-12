@@ -11,16 +11,19 @@ part of 'salary_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$SalaryModel {
 
- String get id; String get employeeId; int get month; int get year; double get basicSalary; double get allowance; double get bonus; double get overtimePay; double get totalSalary; double get afterTaxSalary; String get status; String get createdAt;
+ String get id; String get employeeId; int get month; int get year; double get basicSalary; double get allowance; double get bonus; double get overtimePay; double get totalSalary; double get afterTaxSalary; String get status;@TimestampToStringConverter() String get createdAt;
 /// Create a copy of SalaryModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $SalaryModelCopyWith<SalaryModel> get copyWith => _$SalaryModelCopyWithImpl<SalaryModel>(this as SalaryModel, _$identity);
 
+  /// Serializes this SalaryModel to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +31,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is SalaryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.employeeId, employeeId) || other.employeeId == employeeId)&&(identical(other.month, month) || other.month == month)&&(identical(other.year, year) || other.year == year)&&(identical(other.basicSalary, basicSalary) || other.basicSalary == basicSalary)&&(identical(other.allowance, allowance) || other.allowance == allowance)&&(identical(other.bonus, bonus) || other.bonus == bonus)&&(identical(other.overtimePay, overtimePay) || other.overtimePay == overtimePay)&&(identical(other.totalSalary, totalSalary) || other.totalSalary == totalSalary)&&(identical(other.afterTaxSalary, afterTaxSalary) || other.afterTaxSalary == afterTaxSalary)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,id,employeeId,month,year,basicSalary,allowance,bonus,overtimePay,totalSalary,afterTaxSalary,status,createdAt);
 
@@ -45,7 +48,7 @@ abstract mixin class $SalaryModelCopyWith<$Res>  {
   factory $SalaryModelCopyWith(SalaryModel value, $Res Function(SalaryModel) _then) = _$SalaryModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String employeeId, int month, int year, double basicSalary, double allowance, double bonus, double overtimePay, double totalSalary, double afterTaxSalary, String status, String createdAt
+ String id, String employeeId, int month, int year, double basicSalary, double allowance, double bonus, double overtimePay, double totalSalary, double afterTaxSalary, String status,@TimestampToStringConverter() String createdAt
 });
 
 
@@ -158,7 +161,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String employeeId,  int month,  int year,  double basicSalary,  double allowance,  double bonus,  double overtimePay,  double totalSalary,  double afterTaxSalary,  String status,  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String employeeId,  int month,  int year,  double basicSalary,  double allowance,  double bonus,  double overtimePay,  double totalSalary,  double afterTaxSalary,  String status, @TimestampToStringConverter()  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SalaryModel() when $default != null:
 return $default(_that.id,_that.employeeId,_that.month,_that.year,_that.basicSalary,_that.allowance,_that.bonus,_that.overtimePay,_that.totalSalary,_that.afterTaxSalary,_that.status,_that.createdAt);case _:
@@ -179,7 +182,7 @@ return $default(_that.id,_that.employeeId,_that.month,_that.year,_that.basicSala
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String employeeId,  int month,  int year,  double basicSalary,  double allowance,  double bonus,  double overtimePay,  double totalSalary,  double afterTaxSalary,  String status,  String createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String employeeId,  int month,  int year,  double basicSalary,  double allowance,  double bonus,  double overtimePay,  double totalSalary,  double afterTaxSalary,  String status, @TimestampToStringConverter()  String createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _SalaryModel():
 return $default(_that.id,_that.employeeId,_that.month,_that.year,_that.basicSalary,_that.allowance,_that.bonus,_that.overtimePay,_that.totalSalary,_that.afterTaxSalary,_that.status,_that.createdAt);}
@@ -196,7 +199,7 @@ return $default(_that.id,_that.employeeId,_that.month,_that.year,_that.basicSala
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String employeeId,  int month,  int year,  double basicSalary,  double allowance,  double bonus,  double overtimePay,  double totalSalary,  double afterTaxSalary,  String status,  String createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String employeeId,  int month,  int year,  double basicSalary,  double allowance,  double bonus,  double overtimePay,  double totalSalary,  double afterTaxSalary,  String status, @TimestampToStringConverter()  String createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _SalaryModel() when $default != null:
 return $default(_that.id,_that.employeeId,_that.month,_that.year,_that.basicSalary,_that.allowance,_that.bonus,_that.overtimePay,_that.totalSalary,_that.afterTaxSalary,_that.status,_that.createdAt);case _:
@@ -208,11 +211,11 @@ return $default(_that.id,_that.employeeId,_that.month,_that.year,_that.basicSala
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _SalaryModel extends SalaryModel {
-  const _SalaryModel({required this.id, required this.employeeId, required this.month, required this.year, required this.basicSalary, required this.allowance, required this.bonus, required this.overtimePay, required this.totalSalary, required this.afterTaxSalary, this.status = 'pending', required this.createdAt}): super._();
-  
+  const _SalaryModel({required this.id, required this.employeeId, required this.month, required this.year, required this.basicSalary, required this.allowance, required this.bonus, required this.overtimePay, required this.totalSalary, required this.afterTaxSalary, this.status = 'pending', @TimestampToStringConverter() required this.createdAt}): super._();
+  factory _SalaryModel.fromJson(Map<String, dynamic> json) => _$SalaryModelFromJson(json);
 
 @override final  String id;
 @override final  String employeeId;
@@ -225,7 +228,7 @@ class _SalaryModel extends SalaryModel {
 @override final  double totalSalary;
 @override final  double afterTaxSalary;
 @override@JsonKey() final  String status;
-@override final  String createdAt;
+@override@TimestampToStringConverter() final  String createdAt;
 
 /// Create a copy of SalaryModel
 /// with the given fields replaced by the non-null parameter values.
@@ -233,14 +236,17 @@ class _SalaryModel extends SalaryModel {
 @pragma('vm:prefer-inline')
 _$SalaryModelCopyWith<_SalaryModel> get copyWith => __$SalaryModelCopyWithImpl<_SalaryModel>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$SalaryModelToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _SalaryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.employeeId, employeeId) || other.employeeId == employeeId)&&(identical(other.month, month) || other.month == month)&&(identical(other.year, year) || other.year == year)&&(identical(other.basicSalary, basicSalary) || other.basicSalary == basicSalary)&&(identical(other.allowance, allowance) || other.allowance == allowance)&&(identical(other.bonus, bonus) || other.bonus == bonus)&&(identical(other.overtimePay, overtimePay) || other.overtimePay == overtimePay)&&(identical(other.totalSalary, totalSalary) || other.totalSalary == totalSalary)&&(identical(other.afterTaxSalary, afterTaxSalary) || other.afterTaxSalary == afterTaxSalary)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,id,employeeId,month,year,basicSalary,allowance,bonus,overtimePay,totalSalary,afterTaxSalary,status,createdAt);
 
@@ -257,7 +263,7 @@ abstract mixin class _$SalaryModelCopyWith<$Res> implements $SalaryModelCopyWith
   factory _$SalaryModelCopyWith(_SalaryModel value, $Res Function(_SalaryModel) _then) = __$SalaryModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String employeeId, int month, int year, double basicSalary, double allowance, double bonus, double overtimePay, double totalSalary, double afterTaxSalary, String status, String createdAt
+ String id, String employeeId, int month, int year, double basicSalary, double allowance, double bonus, double overtimePay, double totalSalary, double afterTaxSalary, String status,@TimestampToStringConverter() String createdAt
 });
 
 

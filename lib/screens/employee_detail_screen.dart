@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/employee_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/user_model.dart';
 import '../providers/employee_provider.dart';
 import '../services/backend_api_service.dart';
 import '../theme/app_theme.dart';
 
 class EmployeeDetailScreen extends StatefulWidget {
-  final EmployeeModel? employee;
+  final UserModel? employee;
   final bool isEditMode;
 
   const EmployeeDetailScreen({
@@ -29,25 +30,30 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
   late TextEditingController _salaryController;
   late TextEditingController _passwordController;
   Department _selectedDepartment = Department.it;
-  EmployeeStatus _selectedStatus = EmployeeStatus.active;
+  String _selectedStatus = 'Active';
   DateTime _selectedDate = DateTime.now();
   bool _isLoading = false;
   bool _createAccount = false;
 
+  final List<String> statusOptions = ['Active', 'OnLeave', 'Terminated'];
+
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.employee?.name ?? '');
+    _nameController = TextEditingController(text: widget.employee?.displayName ?? '');
     _emailController = TextEditingController(text: widget.employee?.email ?? '');
     _phoneController = TextEditingController(text: widget.employee?.phone ?? '');
     _positionController = TextEditingController(text: widget.employee?.position ?? '');
-    _salaryController = TextEditingController(text: widget.employee?.salary.toString() ?? '');
+    _salaryController = TextEditingController(text: widget.employee?.baseSalary.toString() ?? '');
     _passwordController = TextEditingController();
 
     if (widget.employee != null) {
       _selectedDepartment = widget.employee!.department;
       _selectedStatus = widget.employee!.status;
-      _selectedDate = widget.employee!.hireDate;
+      if (!statusOptions.contains(_selectedStatus)) {
+          _selectedStatus = 'Active'; 
+      }
+      _selectedDate = widget.employee!.hireDate ?? DateTime.now();
     }
   }
 
@@ -101,7 +107,7 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
                              radius: 50,
                              backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
                              child: Text(
-                               widget.employee?.name.substring(0, 1).toUpperCase() ?? '?',
+                               (widget.employee?.displayName ?? '?').substring(0, 1).toUpperCase(),
                                style: const TextStyle(fontSize: 40, color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
                              ),
                            ),
@@ -130,6 +136,7 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
                                 prefixIcon: Icon(Icons.email_outlined),
                               ),
                               keyboardType: TextInputType.emailAddress,
+                              enabled: !widget.isEditMode, // Prevent changing email as it's linked to Auth
                               validator: (value) => value!.isEmpty ? 'Required' : null,
                             ),
                             const SizedBox(height: 16),
@@ -178,16 +185,16 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
                               onChanged: (value) => setState(() => _selectedDepartment = value!),
                             ),
                             const SizedBox(height: 16),
-                            DropdownButtonFormField<EmployeeStatus>(
+                            DropdownButtonFormField<String>(
                               value: _selectedStatus,
                               decoration: const InputDecoration(
                                 labelText: 'Status',
                                 prefixIcon: Icon(Icons.flag_outlined),
                               ),
-                              items: EmployeeStatus.values.map((status) {
+                              items: statusOptions.map((status) {
                                 return DropdownMenuItem(
                                   value: status,
-                                  child: Text(status.name.toUpperCase()), // Simplified for now
+                                  child: Text(status),
                                 );
                               }).toList(),
                               onChanged: (value) => setState(() => _selectedStatus = value!),
@@ -328,42 +335,53 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
         final currentUserId = FirebaseAuth.instance.currentUser?.uid;
         if (currentUserId == null) throw Exception('User not logged in');
 
-        String employeeUserId = widget.employee?.userId ?? currentUserId;
+        String employeeUserId;
+        
+        if (widget.isEditMode) {
+            employeeUserId = widget.employee!.uid;
+        } else {
+            // Creation Mode
+            if (_createAccount) {
+                // 1. Create Login Account
+                final isHealthy = await BackendApiService.checkHealth();
+                if (!isHealthy) {
+                     throw Exception('Backend server not running. Please start it.');
+                }
 
-        if (_createAccount && !widget.isEditMode) {
-          final isHealthy = await BackendApiService.checkHealth();
-          if (!isHealthy) {
-             throw Exception('Backend server not running. Please start it.');
-          }
+                final result = await BackendApiService.createEmployeeAccount(
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                  displayName: _nameController.text,
+                  role: 'employee',
+                );
 
-          final result = await BackendApiService.createEmployeeAccount(
-            email: _emailController.text,
-            password: _passwordController.text,
-            displayName: _nameController.text,
-            role: 'employee',
-          );
-
-          if (!result['success']) throw Exception(result['error']);
-          employeeUserId = result['uid'];
-
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Account created successfully!'), backgroundColor: Colors.green),
-            );
-          }
+                if (!result['success']) throw Exception(result['error']);
+                employeeUserId = result['uid'];
+                
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Account created successfully!'), backgroundColor: Colors.green),
+                  );
+                }
+            } else {
+                // 2. No Login Account -> Auto-generate local ID for Firestore Document
+                employeeUserId = FirebaseFirestore.instance.collection('users').doc().id;
+            }
         }
 
-        final employee = EmployeeModel(
-          id: widget.employee?.id ?? '',
-          name: _nameController.text,
+        // Create UserModel
+        final employee = UserModel(
+          uid: employeeUserId,
           email: _emailController.text,
-          phone: _phoneController.text,
+          displayName: _nameController.text,
+          role: UserRole.employee,
           department: _selectedDepartment,
-          position: _positionController.text,
-          salary: double.parse(_salaryController.text),
+          createdAt: widget.employee?.createdAt ?? DateTime.now(), // Preserve creation date if editing
+          phone: _phoneController.text,
+          baseSalary: double.parse(_salaryController.text),
           hireDate: _selectedDate,
           status: _selectedStatus,
-          userId: employeeUserId,
+          position: _positionController.text,
         );
 
         final provider = context.read<EmployeeProvider>();
@@ -413,34 +431,24 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
       try {
         final provider = context.read<EmployeeProvider>();
         
-        // 1. Nếu nhân viên có tài khoản đăng nhập (userId != currentUserId của admin), 
-        // có thể cần xóa tài khoản Auth trước qua Backend API
-        // Tuy nhiên, logic hiện tại: 
-        // - userId của employee có thể là userId của chính họ (nếu họ tự đăng ký/được tạo tk)
-        // - hoặc là currentUserId của admin (nếu tạo employee nhưng chưa có tk auth riêng - logic cũ?)
-        // Với logic mới (Add Employee -> Create Account), userId sẽ là UID của employee đó.
-        
-        final employeeUserId = widget.employee?.userId;
+        final employeeUserId = widget.employee?.uid;
         final currentAdminId = FirebaseAuth.instance.currentUser?.uid;
         
-        // Chỉ xóa Auth account nếu userId khác adminId (tránh tự xóa mình)
+        // Only delete Auth if it's not the current admin (prevent self-delete in this context)
+        // And usually we assume employees have accounts if they are in 'users'
+        // But checking Backend health is good practice.
         if (employeeUserId != null && employeeUserId != currentAdminId) {
-             // Kiểm tra Backend server
              final isHealthy = await BackendApiService.checkHealth();
              if (isHealthy) {
                  await BackendApiService.deleteEmployeeAccount(employeeUserId);
              } else {
-                 // Nếu backend không chạy, cảnh báo nhưng vẫn cho phép xóa data local?
-                 // Hoặc throw Exception?
-                 // Tạm thời chỉ thông báo nhẹ và tiếp tục xóa data
                  ScaffoldMessenger.of(context).showSnackBar(
                    const SnackBar(content: Text('Warning: Backend server offline. Auth account not deleted.')),
                  );
              }
         }
 
-        // 2. Xóa data trong Firestore
-        await provider.delete(widget.employee!.id);
+        await provider.deleteEmployee(employeeUserId!);
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -449,7 +457,7 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
               backgroundColor: Colors.green,
             ),
           );
-          Navigator.pop(context); // Pop Detail Screen
+          Navigator.pop(context); 
         }
       } catch (e) {
         if (mounted) {

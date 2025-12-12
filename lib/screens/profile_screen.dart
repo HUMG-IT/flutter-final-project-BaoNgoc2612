@@ -379,8 +379,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String _getRoleDisplayName(UserRole role) {
     switch (role) {
-      case UserRole.admin:
-        return 'Administrator';
       case UserRole.manager:
         return 'Manager';
       case UserRole.employee:
@@ -390,10 +388,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Color _getRoleColor(UserRole role) {
     switch (role) {
-      case UserRole.admin:
-        return Colors.red;
       case UserRole.manager:
-        return Colors.blue;
+        return Colors.red;
       case UserRole.employee:
         return Colors.green;
     }

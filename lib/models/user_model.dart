@@ -1,11 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'employee_model.dart';
+import '../utils/json_converters.dart';
 
 part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
-enum UserRole { admin, manager, employee }
+enum UserRole { manager, employee }
+enum Department { it, hr, marketing, sales, finance, operations, other }
 
 @freezed
 sealed class UserModel with _$UserModel {
@@ -17,18 +18,15 @@ sealed class UserModel with _$UserModel {
     String? displayName,
     required UserRole role,
     required Department department,
-    required DateTime createdAt,
+    @FirestoreDateTimeConverter() required DateTime createdAt,
+    @Default('') String phone,
+    @Default(0) double baseSalary,
+    DateTime? hireDate,
+    @Default('Active') String status,
+    @Default('Staff') String position,
   }) = _UserModel;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    // Handle Firestore Timestamp conversion
-    if (json['createdAt'] is Timestamp) {
-      json['createdAt'] = (json['createdAt'] as Timestamp)
-          .toDate()
-          .toIso8601String();
-    }
-    return _$UserModelFromJson(json);
-  }
+  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserModelToJson(this as _UserModel);
+  Map<String, dynamic> toJson();
 }

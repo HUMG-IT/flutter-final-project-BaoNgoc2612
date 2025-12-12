@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_project/models/user_model.dart';
-import 'package:flutter_project/models/employee_model.dart';
 
 void main() {
   group('UserModel', () {
@@ -43,8 +42,7 @@ void main() {
     });
 
     test('should handle all user roles', () {
-      expect(UserRole.values.length, 3);
-      expect(UserRole.values, contains(UserRole.admin));
+      expect(UserRole.values.length, 2);
       expect(UserRole.values, contains(UserRole.manager));
       expect(UserRole.values, contains(UserRole.employee));
     });

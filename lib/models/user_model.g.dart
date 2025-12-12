@@ -12,21 +12,35 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   displayName: json['displayName'] as String?,
   role: $enumDecode(_$UserRoleEnumMap, json['role']),
   department: $enumDecode(_$DepartmentEnumMap, json['department']),
-  createdAt: DateTime.parse(json['createdAt'] as String),
+  createdAt: const FirestoreDateTimeConverter().fromJson(
+    json['createdAt'] as Object,
+  ),
+  phone: json['phone'] as String? ?? '',
+  baseSalary: (json['baseSalary'] as num?)?.toDouble() ?? 0,
+  hireDate: json['hireDate'] == null
+      ? null
+      : DateTime.parse(json['hireDate'] as String),
+  status: json['status'] as String? ?? 'Active',
+  position: json['position'] as String? ?? 'Staff',
 );
 
-Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
-    <String, dynamic>{
-      'uid': instance.uid,
-      'email': instance.email,
-      'displayName': instance.displayName,
-      'role': _$UserRoleEnumMap[instance.role]!,
-      'department': _$DepartmentEnumMap[instance.department]!,
-      'createdAt': instance.createdAt.toIso8601String(),
-    };
+Map<String, dynamic> _$UserModelToJson(
+  _UserModel instance,
+) => <String, dynamic>{
+  'uid': instance.uid,
+  'email': instance.email,
+  'displayName': instance.displayName,
+  'role': _$UserRoleEnumMap[instance.role]!,
+  'department': _$DepartmentEnumMap[instance.department]!,
+  'createdAt': const FirestoreDateTimeConverter().toJson(instance.createdAt),
+  'phone': instance.phone,
+  'baseSalary': instance.baseSalary,
+  'hireDate': instance.hireDate?.toIso8601String(),
+  'status': instance.status,
+  'position': instance.position,
+};
 
 const _$UserRoleEnumMap = {
-  UserRole.admin: 'admin',
   UserRole.manager: 'manager',
   UserRole.employee: 'employee',
 };
@@ -37,4 +51,6 @@ const _$DepartmentEnumMap = {
   Department.marketing: 'marketing',
   Department.sales: 'sales',
   Department.finance: 'finance',
+  Department.operations: 'operations',
+  Department.other: 'other',
 };

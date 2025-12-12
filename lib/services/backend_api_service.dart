@@ -17,6 +17,14 @@ class BackendApiService {
     String role = 'employee',
   }) async {
     try {
+      print('API Request: POST $baseUrl/api/employees/create-account');
+      print('Body: ${json.encode({
+          'email': email,
+          'password': password,
+          'displayName': displayName,
+          'role': role,
+      })}');
+
       final response = await http.post(
         Uri.parse('$baseUrl/api/employees/create-account'),
         headers: {'Content-Type': 'application/json'},
@@ -27,6 +35,9 @@ class BackendApiService {
           'role': role,
         }),
       );
+      
+      print('API Response Status: ${response.statusCode}');
+      print('API Response Body: ${response.body}');
 
       final data = json.decode(response.body);
 

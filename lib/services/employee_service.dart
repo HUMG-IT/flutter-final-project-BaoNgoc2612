@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/employee_model.dart';
+import '../models/user_model.dart';
 
 class EmployeeService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -7,44 +7,50 @@ class EmployeeService {
 
   EmployeeService({required this.userId});
 
-  // COLLECTION theo userId (security)
-  CollectionReference _employeesRef() {
-    return _firestore.collection('users').doc(userId).collection('employees');
+  // COLLECTION root (unify data source)
+  CollectionReference _usersRef() {
+    return _firestore.collection('users');
   }
 
-  // STREAM: Real-time list
-  Stream<List<EmployeeModel>> getEmployeesStream() {
-    return _employeesRef()
-        .orderBy('hireDate', descending: true)
+  // STREAM: List of employees (filter by role)
+  // We filter by role 'employee' to show only employees in the list
+  Stream<List<UserModel>> getEmployeesStream() {
+    return _usersRef()
+        .where('role', isEqualTo: 'employee')
         .snapshots()
         .map(
           (snapshot) => snapshot.docs.map((doc) {
             final data = doc.data() as Map<String, dynamic>;
-            data['id'] = doc.id;
-            return EmployeeModel.fromJson(data);
+            // Ensure data has the ID if needed, but UserModel uses 'uid'.
+            // Firestore data should already have 'uid' inside if saved correctly, 
+            // but doc.id is the source of truth for ID.
+            if (!data.containsKey('uid')) {
+                data['uid'] = doc.id;
+            }
+            return UserModel.fromJson(data);
           }).toList(),
         );
   }
 
-  // CREATE
-  Future<EmployeeModel?> createEmployee(EmployeeModel employee) async {
+  // CREATE / UPDATE User (Employee Profile)
+  // Since users are keyed by UID, create and update are similar operations (set/update)
+  Future<UserModel?> saveEmployee(UserModel user) async {
     try {
-      DocumentReference docRef = await _employeesRef().add(employee.toJson());
-      return employee.copyWith(id: docRef.id);
+      await _usersRef().doc(user.uid).set(user.toJson(), SetOptions(merge: true));
+      return user;
     } catch (e) {
-      print('Create error: $e');
+      print('Save error: $e');
       return null;
     }
   }
 
   // READ single
-  Future<EmployeeModel?> getEmployee(String id) async {
+  Future<UserModel?> getEmployee(String uid) async {
     try {
-      DocumentSnapshot doc = await _employeesRef().doc(id).get();
+      DocumentSnapshot doc = await _usersRef().doc(uid).get();
       if (doc.exists) {
         final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return EmployeeModel.fromJson(data);
+        return UserModel.fromJson(data);
       }
     } catch (e) {
       print('Get error: $e');
@@ -52,21 +58,11 @@ class EmployeeService {
     return null;
   }
 
-  // UPDATE
-  Future<bool> updateEmployee(String id, EmployeeModel employee) async {
-    try {
-      await _employeesRef().doc(id).update(employee.toJson());
-      return true;
-    } catch (e) {
-      print('Update error: $e');
-      return false;
-    }
-  }
-
   // DELETE
-  Future<bool> deleteEmployee(String id) async {
+  Future<bool> deleteEmployee(String uid) async {
     try {
-      await _employeesRef().doc(id).delete();
+      // Also should probably delete from Auth via Backend API, but this just deletes profile
+      await _usersRef().doc(uid).delete();
       return true;
     } catch (e) {
       print('Delete error: $e');

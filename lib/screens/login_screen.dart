@@ -278,10 +278,73 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       if (mounted) {
-        setState(() {
-          _error = e.toString().replaceAll('Exception: ', '');
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
+        
+        final errorMessage = e.toString();
+        if (errorMessage.contains('Email chưa được xác thực')) {
+          _showVerificationDialog();
+        } else {
+          setState(() {
+            _error = errorMessage.replaceAll('Exception: ', '');
+          });
+        }
+      }
+    }
+  }
+
+  void _showVerificationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: const [
+            Icon(Icons.mark_email_unread, color: Colors.orange),
+            SizedBox(width: 8),
+            Text('Email Not Verified'),
+          ],
+        ),
+        content: const Text(
+          'Your email is not verified yet. Please check your inbox and verify your email to login.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _resendVerification();
+            },
+            child: const Text('Resend Email'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _resendVerification() async {
+    setState(() => _isLoading = true);
+    try {
+      await context.read<AuthProvider>().resendVerificationEmail(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Verification email sent! Please check your inbox.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _error = e.toString().replaceAll('Exception: ', ''));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
       }
     }
   }
