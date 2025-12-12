@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../utils/json_converters.dart';
 
 part 'salary_model.freezed.dart';
@@ -26,5 +25,6 @@ sealed class SalaryModel with _$SalaryModel {
 
   factory SalaryModel.fromJson(Map<String, dynamic> json) => _$SalaryModelFromJson(json);
 
+  @override
   Map<String, dynamic> toJson();
 }

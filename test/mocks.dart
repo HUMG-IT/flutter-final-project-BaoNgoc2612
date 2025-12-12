@@ -76,12 +76,6 @@ class MockEmployeeProvider extends ChangeNotifier implements EmployeeProvider {
   List<UserModel> get employees => _employees;
   final List<UserModel> _employees = [];
 
-  // Assuming provider logic might not expose stream directly in interface or we mock it simple
-  // But if the abstract class/interface requires it, we must implement.
-  // The real provider has 'employees' getter and uses stream internally.
-  // Checking EmployeeProvider interface... it extends ChangeNotifier.
-  // It has 'employees', 'isLoading', 'loadEmployees', 'addEmployee', etc.
-  
   bool _isLoading = false;
   @override
   bool get isLoading => _isLoading;

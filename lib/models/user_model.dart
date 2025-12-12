@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../utils/json_converters.dart';
 
 part 'user_model.freezed.dart';
@@ -28,5 +27,6 @@ sealed class UserModel with _$UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
+  @override
   Map<String, dynamic> toJson();
 }
