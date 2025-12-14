@@ -5,22 +5,22 @@ import '../services/auth_service.dart';
 import '../models/user_model.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final AuthService _authService = AuthService();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final AuthService _authService;
+  
   UserModel? _user;
   UserModel? get user => _user;
   bool get isAuthenticated => _user != null;
 
-  AuthProvider() {
-    _auth.authStateChanges().listen((firebaseUser) async {
+  AuthProvider({AuthService? authService}) 
+      : _authService = authService ?? AuthService() {
+    _authService.authStateChanges.listen((firebaseUser) async {
       try {
         if (firebaseUser != null) {
           // Force reload to get latest emailVerified status
-          await firebaseUser.reload();
+          await _authService.reloadUser(firebaseUser);
           
           // Re-fetch current user after reload to ensure we have the updated object
-          final currentUser = FirebaseAuth.instance.currentUser;
+          final currentUser = _authService.currentUser;
 
           if (currentUser == null || !currentUser.emailVerified) {
             _user = null;
@@ -28,13 +28,10 @@ class AuthProvider extends ChangeNotifier {
             return;
           }
 
-          final userDoc = await FirebaseFirestore.instance
-              .collection('users')
-              .doc(currentUser.uid)
-              .get();
+          final userModel = await _authService.getUserData(currentUser.uid);
 
-          if (userDoc.exists) {
-            _user = UserModel.fromJson(userDoc.data()!);
+          if (userModel != null) {
+            _user = userModel;
           } else {
             // Fallback nếu chưa có data trong Firestore
             final isHardcodedAdmin = currentUser.email == 'admin@gmail.com';

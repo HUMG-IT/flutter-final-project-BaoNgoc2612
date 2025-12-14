@@ -42,9 +42,10 @@ void main() {
     });
 
     test('should handle all user roles', () {
-      expect(UserRole.values.length, 2);
+      expect(UserRole.values.length, 3);
       expect(UserRole.values, contains(UserRole.manager));
       expect(UserRole.values, contains(UserRole.employee));
+      expect(UserRole.values, contains(UserRole.admin));
     });
   });
 }

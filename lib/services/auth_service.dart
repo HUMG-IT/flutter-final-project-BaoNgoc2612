@@ -137,6 +137,20 @@ class AuthService {
     }
   }
 
+  // Get User Data
+  Future<UserModel?> getUserData(String uid) async {
+    final userDoc = await _firestore.collection('users').doc(uid).get();
+    if (userDoc.exists) {
+      return UserModel.fromJson(userDoc.data()!);
+    }
+    return null;
+  }
+
+  // Reload User
+  Future<void> reloadUser(User user) async {
+    await user.reload();
+  }
+
   String _handleAuthError(FirebaseAuthException e) {
     switch (e.code) {
       case 'email-already-in-use':
