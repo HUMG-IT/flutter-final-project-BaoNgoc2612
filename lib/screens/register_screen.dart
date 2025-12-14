@@ -146,7 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             
                       // Department (Manager's Department)
                       DropdownButtonFormField<Department>(
-                        initialValue: _selectedDepartment,
+                        value: _selectedDepartment,
                         decoration: const InputDecoration(
                           labelText: 'My Department',
                           prefixIcon: Icon(Icons.business_outlined),
@@ -233,7 +233,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: _isLoading
                               ? const CircularProgressIndicator(color: Colors.white)
                               : const Text(
-                                  'REGISTER AS MANAGER',
+                                  'REGISTER',
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                         ),
@@ -242,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       const SizedBox(height: 16),
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        const Text(
+                        child: const Text(
                           'Already have an account? Login',
                           style: TextStyle(
                             color: AppTheme.secondaryColor,
@@ -277,7 +277,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: _passwordController.text,
         name: _nameController.text.trim(),
         department: _selectedDepartment,
-        role: UserRole.manager,
+        role: UserRole.employee,
       );
 
       if (result != null) {

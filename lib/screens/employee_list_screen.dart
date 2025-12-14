@@ -9,22 +9,24 @@ import '../providers/language_provider.dart';
 
 class EmployeeListScreen extends StatelessWidget {
   final String userId;
+  final UserRole userRole;
 
-  const EmployeeListScreen({super.key, required this.userId});
+  const EmployeeListScreen({super.key, required this.userId, required this.userRole});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EmployeeProvider>(
-      create: (_) => EmployeeProvider(userId: userId),
-      child: EmployeeListContent(userId: userId),
+      create: (_) => EmployeeProvider(userId: userId, viewerRole: userRole),
+      child: EmployeeListContent(userId: userId, userRole: userRole),
     );
   }
 }
 
 class EmployeeListContent extends StatefulWidget {
   final String userId;
+  final UserRole userRole;
 
-  const EmployeeListContent({required this.userId});
+  const EmployeeListContent({required this.userId, required this.userRole});
 
   @override
   State<EmployeeListContent> createState() => _EmployeeListContentState();
@@ -237,7 +239,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                 context,
                 MaterialPageRoute(
                   builder: (_) => ChangeNotifierProvider(
-                    create: (_) => EmployeeProvider(userId: userId),
+                    create: (_) => EmployeeProvider(userId: userId, viewerRole: widget.userRole),
                     child: EmployeeDetailScreen(
                       employee: employee,
                       isEditMode: true,
@@ -293,6 +295,12 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                         Row(
                           children: [
                             _buildBadge(
+                              employee.role.name.toUpperCase(),
+                              Colors.purple.shade50,
+                              Colors.purple.shade700,
+                            ),
+                            const SizedBox(width: 8),
+                            _buildBadge(
                               employee.department.name.toUpperCase(),
                               Colors.blue.shade50,
                               Colors.blue.shade700,
@@ -322,7 +330,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => ChangeNotifierProvider(
-                              create: (_) => EmployeeProvider(userId: userId),
+                              create: (_) => EmployeeProvider(userId: userId, viewerRole: widget.userRole),
                               child: EmployeeDetailScreen(
                                 employee: employee,
                                 isEditMode: true,
@@ -401,28 +409,35 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RadioGroup<SortOption>(
-                value: _sortBy,
-                onChanged: (val) {
-                  if (val != null) {
-                    setModalState(() => _sortBy = val);
-                    setState(() {});
-                  }
-                },
-                child: Column(
+                Column(
                   children: [
                     Text('Sort By', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 20),
-                    _buildSortOption(context, 'Name', SortOption.name, setModalState),
-                    _buildSortOption(context, 'Salary', SortOption.salary, setModalState),
-                    _buildSortOption(context, 'Hire Date', SortOption.hireDate, setModalState),
+                    _buildSortOption(context, 'Name', SortOption.name, _sortBy, (val) {
+                       if (val != null) {
+                         setModalState(() => _sortBy = val);
+                         setState(() {});
+                       }
+                    }),
+                    _buildSortOption(context, 'Salary', SortOption.salary, _sortBy, (val) {
+                       if (val != null) {
+                         setModalState(() => _sortBy = val);
+                         setState(() {});
+                       }
+                    }),
+                    _buildSortOption(context, 'Hire Date', SortOption.hireDate, _sortBy, (val) {
+                       if (val != null) {
+                         setModalState(() => _sortBy = val);
+                         setState(() {});
+                       }
+                    }),
                   ],
                 ),
-              ),
               const Divider(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -444,15 +459,18 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
               ),
             ],
           ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildSortOption(BuildContext context, String label, SortOption option, StateSetter setModalState) {
+  Widget _buildSortOption(BuildContext context, String label, SortOption option, SortOption groupValue, ValueChanged<SortOption?> onChanged) {
     return RadioListTile<SortOption>(
       title: Text(label),
       value: option,
+      groupValue: groupValue,
+      onChanged: onChanged,
       activeColor: AppTheme.primaryColor,
     );
   }
@@ -466,8 +484,9 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -526,6 +545,7 @@ class _EmployeeListContentState extends State<EmployeeListContent> {
               ),
               const SizedBox(height: 20),
             ],
+          ),
           ),
         ),
       ),

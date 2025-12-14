@@ -1,0 +1,15 @@
+﻿Analyzing flutter-final-project-BaoNgoc2612...                  
+
+   info - Use 'const' with the constructor to improve performance - lib\main.dart:15:10 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\main.dart:35:33 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\main.dart:36:34 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\main.dart:41:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\main.dart:43:20 - prefer_const_constructors
+warning - The value of the field '_passwordController' isn't used - lib\screens\employee_detail_screen.dart:32:30 - unused_field
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\employee_info_screen.dart:230:49 - deprecated_member_use
+   info - Constructors for public widgets should have a named 'key' parameter - lib\screens\employee_list_screen.dart:27:9 - use_key_in_widget_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\login_screen.dart:301:16 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\register_screen.dart:294:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\ui\login_screen_test.dart:25:14 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\ui\login_screen_test.dart:26:15 - prefer_const_constructors
+

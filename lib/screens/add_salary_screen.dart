@@ -141,7 +141,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
                       children: [
                         Expanded(
                           child: DropdownButtonFormField<int>(
-                            initialValue: _selectedMonth,
+                            value: _selectedMonth,
                             decoration: const InputDecoration(
                               labelText: 'Month',
                               prefixIcon: Icon(Icons.calendar_month),
@@ -159,7 +159,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
                         const SizedBox(width: 16),
                         Expanded(
                           child: DropdownButtonFormField<int>(
-                            initialValue: _selectedYear,
+                            value: _selectedYear,
                             decoration: const InputDecoration(
                               labelText: 'Year',
                               prefixIcon: Icon(Icons.calendar_today),
@@ -239,7 +239,7 @@ class _AddSalaryScreenState extends State<AddSalaryScreen> {
 
                     // Status
                     DropdownButtonFormField<String>(
-                      initialValue: _status,
+                      value: _status,
                       decoration: const InputDecoration(
                         labelText: 'Status',
                         prefixIcon: Icon(Icons.flag_outlined),

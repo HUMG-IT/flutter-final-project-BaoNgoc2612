@@ -25,7 +25,7 @@ void main() {
       ],
       child: const MaterialApp(
         home: Scaffold(
-          body: EmployeeListContent(userId: 'test_user'),
+          body: EmployeeListContent(userId: 'test_user', userRole: UserRole.admin),
         ),
       ),
     );
@@ -170,7 +170,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Close bottom sheet
-    await tester.pageBack();
+    await tester.tapAt(const Offset(1, 1));
     await tester.pumpAndSettle();
   });
 
@@ -221,8 +221,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Close dialog
-    // await tester.tapAt(const Offset(10, 10)); // Tap outside
-    await tester.pageBack();
+    await tester.tapAt(const Offset(1, 1));
     await tester.pumpAndSettle();
 
     // Verify only IT Guy exists

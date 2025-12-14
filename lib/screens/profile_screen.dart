@@ -383,6 +383,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return 'Manager';
       case UserRole.employee:
         return 'Employee';
+      case UserRole.admin:
+        return 'Admin';
     }
   }
 
@@ -392,6 +394,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Colors.red;
       case UserRole.employee:
         return Colors.green;
+      case UserRole.admin:
+        return Colors.purple;
     }
   }
 }

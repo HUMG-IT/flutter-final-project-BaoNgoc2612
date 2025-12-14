@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 import '../providers/employee_provider.dart';
+import '../providers/auth_provider.dart';
 import '../services/backend_api_service.dart';
 import '../theme/app_theme.dart';
 
@@ -28,12 +29,11 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
   late TextEditingController _phoneController;
   late TextEditingController _positionController;
   late TextEditingController _salaryController;
-  late TextEditingController _passwordController;
   Department _selectedDepartment = Department.it;
+  UserRole _selectedRole = UserRole.employee;
   String _selectedStatus = 'Active';
   DateTime _selectedDate = DateTime.now();
   bool _isLoading = false;
-  bool _createAccount = false;
 
   final List<String> statusOptions = ['Active', 'OnLeave', 'Terminated'];
 
@@ -45,10 +45,11 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
     _phoneController = TextEditingController(text: widget.employee?.phone ?? '');
     _positionController = TextEditingController(text: widget.employee?.position ?? '');
     _salaryController = TextEditingController(text: widget.employee?.baseSalary.toString() ?? '');
-    _passwordController = TextEditingController();
+
 
     if (widget.employee != null) {
       _selectedDepartment = widget.employee!.department;
+      _selectedRole = widget.employee!.role;
       _selectedStatus = widget.employee!.status;
       if (!statusOptions.contains(_selectedStatus)) {
           _selectedStatus = 'Active'; 
@@ -64,12 +65,15 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
     _phoneController.dispose();
     _positionController.dispose();
     _salaryController.dispose();
-    _passwordController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = context.read<AuthProvider>().user;
+    final isAdmin = currentUser?.role == UserRole.admin;
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
@@ -171,7 +175,7 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
                             ),
                             const SizedBox(height: 16),
                             DropdownButtonFormField<Department>(
-                              initialValue: _selectedDepartment,
+                              value: _selectedDepartment,
                               decoration: const InputDecoration(
                                 labelText: 'Department',
                                 prefixIcon: Icon(Icons.business_outlined),
@@ -186,7 +190,7 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
                             ),
                             const SizedBox(height: 16),
                             DropdownButtonFormField<String>(
-                              initialValue: _selectedStatus,
+                              value: _selectedStatus,
                               decoration: const InputDecoration(
                                 labelText: 'Status',
                                 prefixIcon: Icon(Icons.flag_outlined),
@@ -235,43 +239,32 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
                         ),
                       ),
                     ),
-
-                    if (!widget.isEditMode) ...[
+                    
+                    if (isAdmin) ...[
                       const SizedBox(height: 24),
-                      _buildSectionTitle('Account'),
+                      _buildSectionTitle('Role Management (Admin)'),
                       Card(
                         child: Padding(
-                           padding: const EdgeInsets.all(16),
-                           child: Column(
-                             children: [
-                               CheckboxListTile(
-                                title: const Text('Create Login Account'),
-                                subtitle: const Text('Admin creates password for employee'),
-                                value: _createAccount,
-                                activeColor: AppTheme.primaryColor,
-                                contentPadding: EdgeInsets.zero,
-                                onChanged: (value) => setState(() => _createAccount = value ?? false),
-                              ),
-                              if (_createAccount) ...[
-                                const SizedBox(height: 8),
-                                TextFormField(
-                                  controller: _passwordController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Password',
-                                    helperText: 'Min 6 characters',
-                                    prefixIcon: Icon(Icons.lock_outline),
-                                  ),
-                                  obscureText: true,
-                                  validator: _createAccount
-                                      ? (value) => (value == null || value.length < 6) ? 'Min 6 chars' : null
-                                      : null,
-                                ),
-                              ],
-                             ],
-                           ),
+                          padding: const EdgeInsets.all(16),
+                          child: DropdownButtonFormField<UserRole>(
+                            value: _selectedRole,
+                            decoration: const InputDecoration(
+                              labelText: 'Role',
+                              prefixIcon: Icon(Icons.security),
+                            ),
+                            items: UserRole.values.map((role) {
+                              return DropdownMenuItem(
+                                value: role,
+                                child: Text(role.name.toUpperCase()),
+                              );
+                            }).toList(),
+                            onChanged: (value) => setState(() => _selectedRole = value!),
+                          ),
                         ),
                       ),
                     ],
+
+
 
                     const SizedBox(height: 32),
                     SizedBox(
@@ -340,33 +333,8 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
         if (widget.isEditMode) {
             employeeUserId = widget.employee!.uid;
         } else {
-            // Creation Mode
-            if (_createAccount) {
-                // 1. Create Login Account
-                final isHealthy = await BackendApiService.checkHealth();
-                if (!isHealthy) {
-                     throw Exception('Backend server not running. Please start it.');
-                }
-
-                final result = await BackendApiService.createEmployeeAccount(
-                  email: _emailController.text,
-                  password: _passwordController.text,
-                  displayName: _nameController.text,
-                  role: 'employee',
-                );
-
-                if (!result['success']) throw Exception(result['error']);
-                employeeUserId = result['uid'];
-                
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Account created successfully!'), backgroundColor: Colors.green),
-                  );
-                }
-            } else {
-                // 2. No Login Account -> Auto-generate local ID for Firestore Document
-                employeeUserId = FirebaseFirestore.instance.collection('users').doc().id;
-            }
+            // Creation Mode - Just generate an ID for Firestore
+            employeeUserId = FirebaseFirestore.instance.collection('users').doc().id;
         }
 
         // Create UserModel
@@ -374,7 +342,7 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
           uid: employeeUserId,
           email: _emailController.text,
           displayName: _nameController.text,
-          role: UserRole.employee,
+          role: _selectedRole,
           department: _selectedDepartment,
           createdAt: widget.employee?.createdAt ?? DateTime.now(), // Preserve creation date if editing
           phone: _phoneController.text,

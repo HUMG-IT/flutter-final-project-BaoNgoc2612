@@ -14,288 +14,568 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$UserModel {
+  String get uid;
+  String get email;
+  String? get displayName;
+  UserRole get role;
+  Department get department;
+  @FirestoreDateTimeConverter()
+  DateTime get createdAt;
+  String get phone;
+  double get baseSalary;
+  DateTime? get hireDate;
+  String get status;
+  String get position;
 
- String get uid; String get email; String? get displayName; UserRole get role; Department get department;@FirestoreDateTimeConverter() DateTime get createdAt; String get phone; double get baseSalary; DateTime? get hireDate; String get status; String get position;
-/// Create a copy of UserModel
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>(this as UserModel, _$identity);
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<UserModel> get copyWith =>
+      _$UserModelCopyWithImpl<UserModel>(this as UserModel, _$identity);
 
   /// Serializes this UserModel to a JSON map.
   Map<String, dynamic> toJson();
 
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is UserModel &&
+            (identical(other.uid, uid) || other.uid == uid) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.displayName, displayName) ||
+                other.displayName == displayName) &&
+            (identical(other.role, role) || other.role == role) &&
+            (identical(other.department, department) ||
+                other.department == department) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.baseSalary, baseSalary) ||
+                other.baseSalary == baseSalary) &&
+            (identical(other.hireDate, hireDate) ||
+                other.hireDate == hireDate) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.position, position) ||
+                other.position == position));
+  }
 
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.role, role) || other.role == role)&&(identical(other.department, department) || other.department == department)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.baseSalary, baseSalary) || other.baseSalary == baseSalary)&&(identical(other.hireDate, hireDate) || other.hireDate == hireDate)&&(identical(other.status, status) || other.status == status)&&(identical(other.position, position) || other.position == position));
-}
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, uid, email, displayName, role,
+      department, createdAt, phone, baseSalary, hireDate, status, position);
 
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,uid,email,displayName,role,department,createdAt,phone,baseSalary,hireDate,status,position);
-
-@override
-String toString() {
-  return 'UserModel(uid: $uid, email: $email, displayName: $displayName, role: $role, department: $department, createdAt: $createdAt, phone: $phone, baseSalary: $baseSalary, hireDate: $hireDate, status: $status, position: $position)';
-}
-
-
+  @override
+  String toString() {
+    return 'UserModel(uid: $uid, email: $email, displayName: $displayName, role: $role, department: $department, createdAt: $createdAt, phone: $phone, baseSalary: $baseSalary, hireDate: $hireDate, status: $status, position: $position)';
+  }
 }
 
 /// @nodoc
-abstract mixin class $UserModelCopyWith<$Res>  {
-  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) = _$UserModelCopyWithImpl;
-@useResult
-$Res call({
- String uid, String email, String? displayName, UserRole role, Department department,@FirestoreDateTimeConverter() DateTime createdAt, String phone, double baseSalary, DateTime? hireDate, String status, String position
-});
-
-
-
-
+abstract mixin class $UserModelCopyWith<$Res> {
+  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) =
+      _$UserModelCopyWithImpl;
+  @useResult
+  $Res call(
+      {String uid,
+      String email,
+      String? displayName,
+      UserRole role,
+      Department department,
+      @FirestoreDateTimeConverter() DateTime createdAt,
+      String phone,
+      double baseSalary,
+      DateTime? hireDate,
+      String status,
+      String position});
 }
+
 /// @nodoc
-class _$UserModelCopyWithImpl<$Res>
-    implements $UserModelCopyWith<$Res> {
+class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
   _$UserModelCopyWithImpl(this._self, this._then);
 
   final UserModel _self;
   final $Res Function(UserModel) _then;
 
-/// Create a copy of UserModel
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? uid = null,Object? email = null,Object? displayName = freezed,Object? role = null,Object? department = null,Object? createdAt = null,Object? phone = null,Object? baseSalary = null,Object? hireDate = freezed,Object? status = null,Object? position = null,}) {
-  return _then(_self.copyWith(
-uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
-as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
-as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as UserRole,department: null == department ? _self.department : department // ignore: cast_nullable_to_non_nullable
-as Department,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
-as String,baseSalary: null == baseSalary ? _self.baseSalary : baseSalary // ignore: cast_nullable_to_non_nullable
-as double,hireDate: freezed == hireDate ? _self.hireDate : hireDate // ignore: cast_nullable_to_non_nullable
-as DateTime?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? uid = null,
+    Object? email = null,
+    Object? displayName = freezed,
+    Object? role = null,
+    Object? department = null,
+    Object? createdAt = null,
+    Object? phone = null,
+    Object? baseSalary = null,
+    Object? hireDate = freezed,
+    Object? status = null,
+    Object? position = null,
+  }) {
+    return _then(_self.copyWith(
+      uid: null == uid
+          ? _self.uid
+          : uid // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _self.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      displayName: freezed == displayName
+          ? _self.displayName
+          : displayName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      role: null == role
+          ? _self.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as UserRole,
+      department: null == department
+          ? _self.department
+          : department // ignore: cast_nullable_to_non_nullable
+              as Department,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      phone: null == phone
+          ? _self.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String,
+      baseSalary: null == baseSalary
+          ? _self.baseSalary
+          : baseSalary // ignore: cast_nullable_to_non_nullable
+              as double,
+      hireDate: freezed == hireDate
+          ? _self.hireDate
+          : hireDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      position: null == position
+          ? _self.position
+          : position // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
-
-}
-
 
 /// Adds pattern-matching-related methods to [UserModel].
 extension UserModelPatterns on UserModel {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _UserModel value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _UserModel() when $default != null:
-return $default(_that);case _:
-  return orElse();
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_UserModel value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UserModel() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
 
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _UserModel value)  $default,){
-final _that = this;
-switch (_that) {
-case _UserModel():
-return $default(_that);}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_UserModel value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserModel():
+        return $default(_that);
+    }
+  }
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _UserModel value)?  $default,){
-final _that = this;
-switch (_that) {
-case _UserModel() when $default != null:
-return $default(_that);case _:
-  return null;
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
 
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_UserModel value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserModel() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String uid,  String email,  String? displayName,  UserRole role,  Department department, @FirestoreDateTimeConverter()  DateTime createdAt,  String phone,  double baseSalary,  DateTime? hireDate,  String status,  String position)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _UserModel() when $default != null:
-return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.department,_that.createdAt,_that.phone,_that.baseSalary,_that.hireDate,_that.status,_that.position);case _:
-  return orElse();
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
 
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            String uid,
+            String email,
+            String? displayName,
+            UserRole role,
+            Department department,
+            @FirestoreDateTimeConverter() DateTime createdAt,
+            String phone,
+            double baseSalary,
+            DateTime? hireDate,
+            String status,
+            String position)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UserModel() when $default != null:
+        return $default(
+            _that.uid,
+            _that.email,
+            _that.displayName,
+            _that.role,
+            _that.department,
+            _that.createdAt,
+            _that.phone,
+            _that.baseSalary,
+            _that.hireDate,
+            _that.status,
+            _that.position);
+      case _:
+        return orElse();
+    }
+  }
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String uid,  String email,  String? displayName,  UserRole role,  Department department, @FirestoreDateTimeConverter()  DateTime createdAt,  String phone,  double baseSalary,  DateTime? hireDate,  String status,  String position)  $default,) {final _that = this;
-switch (_that) {
-case _UserModel():
-return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.department,_that.createdAt,_that.phone,_that.baseSalary,_that.hireDate,_that.status,_that.position);}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String uid,  String email,  String? displayName,  UserRole role,  Department department, @FirestoreDateTimeConverter()  DateTime createdAt,  String phone,  double baseSalary,  DateTime? hireDate,  String status,  String position)?  $default,) {final _that = this;
-switch (_that) {
-case _UserModel() when $default != null:
-return $default(_that.uid,_that.email,_that.displayName,_that.role,_that.department,_that.createdAt,_that.phone,_that.baseSalary,_that.hireDate,_that.status,_that.position);case _:
-  return null;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            String uid,
+            String email,
+            String? displayName,
+            UserRole role,
+            Department department,
+            @FirestoreDateTimeConverter() DateTime createdAt,
+            String phone,
+            double baseSalary,
+            DateTime? hireDate,
+            String status,
+            String position)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserModel():
+        return $default(
+            _that.uid,
+            _that.email,
+            _that.displayName,
+            _that.role,
+            _that.department,
+            _that.createdAt,
+            _that.phone,
+            _that.baseSalary,
+            _that.hireDate,
+            _that.status,
+            _that.position);
+    }
+  }
 
-}
-}
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
 
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            String uid,
+            String email,
+            String? displayName,
+            UserRole role,
+            Department department,
+            @FirestoreDateTimeConverter() DateTime createdAt,
+            String phone,
+            double baseSalary,
+            DateTime? hireDate,
+            String status,
+            String position)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserModel() when $default != null:
+        return $default(
+            _that.uid,
+            _that.email,
+            _that.displayName,
+            _that.role,
+            _that.department,
+            _that.createdAt,
+            _that.phone,
+            _that.baseSalary,
+            _that.hireDate,
+            _that.status,
+            _that.position);
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc
 @JsonSerializable()
-
 class _UserModel extends UserModel {
-  const _UserModel({required this.uid, required this.email, this.displayName, required this.role, required this.department, @FirestoreDateTimeConverter() required this.createdAt, this.phone = '', this.baseSalary = 0, this.hireDate, this.status = 'Active', this.position = 'Staff'}): super._();
-  factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  const _UserModel(
+      {required this.uid,
+      required this.email,
+      this.displayName,
+      required this.role,
+      required this.department,
+      @FirestoreDateTimeConverter() required this.createdAt,
+      this.phone = '',
+      this.baseSalary = 0,
+      this.hireDate,
+      this.status = 'Active',
+      this.position = 'Staff'})
+      : super._();
+  factory _UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
-@override final  String uid;
-@override final  String email;
-@override final  String? displayName;
-@override final  UserRole role;
-@override final  Department department;
-@override@FirestoreDateTimeConverter() final  DateTime createdAt;
-@override@JsonKey() final  String phone;
-@override@JsonKey() final  double baseSalary;
-@override final  DateTime? hireDate;
-@override@JsonKey() final  String status;
-@override@JsonKey() final  String position;
+  @override
+  final String uid;
+  @override
+  final String email;
+  @override
+  final String? displayName;
+  @override
+  final UserRole role;
+  @override
+  final Department department;
+  @override
+  @FirestoreDateTimeConverter()
+  final DateTime createdAt;
+  @override
+  @JsonKey()
+  final String phone;
+  @override
+  @JsonKey()
+  final double baseSalary;
+  @override
+  final DateTime? hireDate;
+  @override
+  @JsonKey()
+  final String status;
+  @override
+  @JsonKey()
+  final String position;
 
-/// Create a copy of UserModel
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$UserModelCopyWith<_UserModel> get copyWith => __$UserModelCopyWithImpl<_UserModel>(this, _$identity);
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$UserModelCopyWith<_UserModel> get copyWith =>
+      __$UserModelCopyWithImpl<_UserModel>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$UserModelToJson(this, );
-}
+  @override
+  Map<String, dynamic> toJson() {
+    return _$UserModelToJson(
+      this,
+    );
+  }
 
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.role, role) || other.role == role)&&(identical(other.department, department) || other.department == department)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.baseSalary, baseSalary) || other.baseSalary == baseSalary)&&(identical(other.hireDate, hireDate) || other.hireDate == hireDate)&&(identical(other.status, status) || other.status == status)&&(identical(other.position, position) || other.position == position));
-}
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _UserModel &&
+            (identical(other.uid, uid) || other.uid == uid) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.displayName, displayName) ||
+                other.displayName == displayName) &&
+            (identical(other.role, role) || other.role == role) &&
+            (identical(other.department, department) ||
+                other.department == department) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.baseSalary, baseSalary) ||
+                other.baseSalary == baseSalary) &&
+            (identical(other.hireDate, hireDate) ||
+                other.hireDate == hireDate) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.position, position) ||
+                other.position == position));
+  }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,uid,email,displayName,role,department,createdAt,phone,baseSalary,hireDate,status,position);
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, uid, email, displayName, role,
+      department, createdAt, phone, baseSalary, hireDate, status, position);
 
-@override
-String toString() {
-  return 'UserModel(uid: $uid, email: $email, displayName: $displayName, role: $role, department: $department, createdAt: $createdAt, phone: $phone, baseSalary: $baseSalary, hireDate: $hireDate, status: $status, position: $position)';
-}
-
-
+  @override
+  String toString() {
+    return 'UserModel(uid: $uid, email: $email, displayName: $displayName, role: $role, department: $department, createdAt: $createdAt, phone: $phone, baseSalary: $baseSalary, hireDate: $hireDate, status: $status, position: $position)';
+  }
 }
 
 /// @nodoc
-abstract mixin class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
-  factory _$UserModelCopyWith(_UserModel value, $Res Function(_UserModel) _then) = __$UserModelCopyWithImpl;
-@override @useResult
-$Res call({
- String uid, String email, String? displayName, UserRole role, Department department,@FirestoreDateTimeConverter() DateTime createdAt, String phone, double baseSalary, DateTime? hireDate, String status, String position
-});
-
-
-
-
+abstract mixin class _$UserModelCopyWith<$Res>
+    implements $UserModelCopyWith<$Res> {
+  factory _$UserModelCopyWith(
+          _UserModel value, $Res Function(_UserModel) _then) =
+      __$UserModelCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String uid,
+      String email,
+      String? displayName,
+      UserRole role,
+      Department department,
+      @FirestoreDateTimeConverter() DateTime createdAt,
+      String phone,
+      double baseSalary,
+      DateTime? hireDate,
+      String status,
+      String position});
 }
+
 /// @nodoc
-class __$UserModelCopyWithImpl<$Res>
-    implements _$UserModelCopyWith<$Res> {
+class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
   __$UserModelCopyWithImpl(this._self, this._then);
 
   final _UserModel _self;
   final $Res Function(_UserModel) _then;
 
-/// Create a copy of UserModel
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? uid = null,Object? email = null,Object? displayName = freezed,Object? role = null,Object? department = null,Object? createdAt = null,Object? phone = null,Object? baseSalary = null,Object? hireDate = freezed,Object? status = null,Object? position = null,}) {
-  return _then(_UserModel(
-uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
-as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
-as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as UserRole,department: null == department ? _self.department : department // ignore: cast_nullable_to_non_nullable
-as Department,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
-as String,baseSalary: null == baseSalary ? _self.baseSalary : baseSalary // ignore: cast_nullable_to_non_nullable
-as double,hireDate: freezed == hireDate ? _self.hireDate : hireDate // ignore: cast_nullable_to_non_nullable
-as DateTime?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
-
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? uid = null,
+    Object? email = null,
+    Object? displayName = freezed,
+    Object? role = null,
+    Object? department = null,
+    Object? createdAt = null,
+    Object? phone = null,
+    Object? baseSalary = null,
+    Object? hireDate = freezed,
+    Object? status = null,
+    Object? position = null,
+  }) {
+    return _then(_UserModel(
+      uid: null == uid
+          ? _self.uid
+          : uid // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _self.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      displayName: freezed == displayName
+          ? _self.displayName
+          : displayName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      role: null == role
+          ? _self.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as UserRole,
+      department: null == department
+          ? _self.department
+          : department // ignore: cast_nullable_to_non_nullable
+              as Department,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      phone: null == phone
+          ? _self.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String,
+      baseSalary: null == baseSalary
+          ? _self.baseSalary
+          : baseSalary // ignore: cast_nullable_to_non_nullable
+              as double,
+      hireDate: freezed == hireDate
+          ? _self.hireDate
+          : hireDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      position: null == position
+          ? _self.position
+          : position // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 // dart format on

@@ -69,9 +69,57 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
 
-        // Admin/Manager screens
+        // Manager screens (3 tabs: Employees, Salary, Profile)
+        if (userRole == UserRole.manager) {
+           final List<Widget> managerScreens = [
+            EmployeeListScreen(userId: userId, userRole: userRole),
+            const SalaryScreen(),
+            const ProfileScreen(),
+          ];
+
+          return Scaffold(
+            backgroundColor: AppTheme.backgroundColor,
+            body: IndexedStack(
+              index: _currentIndex,
+              children: managerScreens,
+            ),
+            bottomNavigationBar: Consumer<LanguageProvider>(
+              builder: (context, lang, _) {
+                return _buildBottomNavigationBar(
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.people_outline),
+                      activeIcon: const Icon(Icons.people),
+                      label: lang.getText('home_tab_employees'),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.attach_money_outlined),
+                      activeIcon: const Icon(Icons.attach_money),
+                      label: lang.getText('home_tab_salary'),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.person_outline),
+                      activeIcon: const Icon(Icons.person),
+                      label: lang.getText('home_tab_profile'),
+                    ),
+                  ],
+                );
+              },
+            ),
+             floatingActionButton: _currentIndex == 0
+                ? FloatingActionButton(
+                    onPressed: () => _addEmployee(context),
+                    backgroundColor: AppTheme.primaryColor,
+                    tooltip: 'Add Employee',
+                    child: const Icon(Icons.add, color: Colors.white),
+                  )
+                : null,
+          );
+        }
+
+        // Admin screens (2 tabs: User Management & Profile)
         final List<Widget> screens = [
-          EmployeeListScreen(userId: userId),
+          EmployeeListScreen(userId: userId, userRole: userRole),
           const ProfileScreen(),
         ];
 
@@ -139,12 +187,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _addEmployee(BuildContext context) {
-    final userId = context.read<AuthProvider>().user?.uid ?? '';
+    final user = context.read<AuthProvider>().user;
+    final userId = user?.uid ?? '';
+    final userRole = user?.role ?? UserRole.employee;
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider(
-          create: (_) => EmployeeProvider(userId: userId),
+          create: (_) => EmployeeProvider(userId: userId, viewerRole: userRole),
           child: const EmployeeDetailScreen(isEditMode: false),
         ),
       ),

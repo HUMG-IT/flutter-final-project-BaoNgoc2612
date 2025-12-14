@@ -87,9 +87,25 @@ class AuthService {
             .doc(result.user!.uid)
             .get();
 
-        final userData = userDoc.data() as Map<String, dynamic>;
-        debugPrint('User Data: $userData');
-        return UserModel.fromJson(userData);
+        if (userDoc.exists) {
+          final userData = userDoc.data() as Map<String, dynamic>;
+          debugPrint('User Data: $userData');
+          return UserModel.fromJson(userData);
+        } else if (result.user!.email == 'admin@gmail.com') {
+          // Fallback for admin if firestore doc is missing
+          return UserModel(
+            uid: result.user!.uid,
+            email: result.user!.email!,
+            displayName: result.user!.displayName,
+            role: UserRole.admin,
+            department: Department.it,
+            createdAt: DateTime.now(),
+            position: 'System Administrator',
+            status: 'Active',
+          );
+        } else {
+           throw Exception('User data not found in database');
+        }
       }
     } on FirebaseAuthException catch (e) {
       throw _handleAuthError(e);

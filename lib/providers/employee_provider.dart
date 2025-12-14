@@ -4,6 +4,7 @@ import '../models/user_model.dart';
 
 class EmployeeProvider with ChangeNotifier {
   final String userId;
+  final UserRole viewerRole;
   EmployeeService? _service;
   List<UserModel> _employees = [];
   bool _isLoading = false;
@@ -11,13 +12,13 @@ class EmployeeProvider with ChangeNotifier {
   List<UserModel> get employees => _employees;
   bool get isLoading => _isLoading;
 
-  EmployeeProvider({required this.userId}) {
+  EmployeeProvider({required this.userId, required this.viewerRole}) {
     _service = EmployeeService(userId: userId);
     _initStream();
   }
 
   void _initStream() {
-    _service!.getEmployeesStream().listen((employees) {
+    _service!.getEmployeesStream(viewerRole: viewerRole).listen((employees) {
       _employees = employees;
       notifyListeners();
     });

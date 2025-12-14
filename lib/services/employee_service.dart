@@ -15,10 +15,15 @@ class EmployeeService {
 
   // STREAM: List of employees (filter by role)
   // We filter by role 'employee' to show only employees in the list
-  Stream<List<UserModel>> getEmployeesStream() {
-    return _usersRef()
-        .where('role', isEqualTo: 'employee')
-        .snapshots()
+  Stream<List<UserModel>> getEmployeesStream({required UserRole viewerRole}) {
+    Query query = _usersRef();
+    
+    // Manager only sees employees
+    if (viewerRole == UserRole.manager) {
+      query = query.where('role', isEqualTo: 'employee');
+    }
+
+    return query.snapshots()
         .map(
           (snapshot) => snapshot.docs.map((doc) {
             final data = doc.data() as Map<String, dynamic>;

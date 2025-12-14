@@ -24,10 +24,6 @@ class AuthProvider extends ChangeNotifier {
 
           if (currentUser == null || !currentUser.emailVerified) {
             _user = null;
-            // Ensure they are fully signed out if not verified
-            if (currentUser != null) {
-              await _auth.signOut();
-            }
             notifyListeners();
             return;
           }
@@ -41,13 +37,16 @@ class AuthProvider extends ChangeNotifier {
             _user = UserModel.fromJson(userDoc.data()!);
           } else {
             // Fallback nếu chưa có data trong Firestore
+            final isHardcodedAdmin = currentUser.email == 'admin@gmail.com';
             _user = UserModel(
               uid: currentUser.uid,
               email: currentUser.email!,
               displayName: currentUser.displayName,
-              role: UserRole.employee,
-              department: Department.it,
+              role: isHardcodedAdmin ? UserRole.admin : UserRole.employee,
+              department: isHardcodedAdmin ? Department.it : Department.it,
               createdAt: DateTime.now(),
+              position: isHardcodedAdmin ? 'System Administrator' : 'Staff',
+              status: 'Active',
             );
           }
         } else {

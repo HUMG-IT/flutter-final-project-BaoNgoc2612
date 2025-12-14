@@ -4,7 +4,7 @@ import '../utils/json_converters.dart';
 part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
-enum UserRole { manager, employee }
+enum UserRole { manager, employee, admin }
 enum Department { it, hr, marketing, sales, finance, operations, other }
 
 @freezed
